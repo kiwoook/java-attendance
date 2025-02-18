@@ -3,6 +3,7 @@ package attendance;
 import attendance.common.ErrorMessage;
 import attendance.domain.Attendance;
 import attendance.domain.Attendances;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -56,5 +57,18 @@ public class AttendancesTest {
             List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
 
         assertDoesNotThrow(() -> attendances.checkName("쿠키"));
+    }
+
+    @Test
+    void 출석을_저장한다(){
+        Attendances attendances = new Attendances(List.of());
+        LocalDate attendanceDate = LocalDate.of(2024, 12, 3);
+        LocalTime attendanceTime = LocalTime.of(8, 1);
+
+        Attendance attendance = new Attendance("쿠키", attendanceDate, attendanceTime);
+
+        Attendances expect = new Attendances(List.of(attendance));
+
+        assertThat(attendances.add(attendance)).isEqualTo(expect);
     }
 }
