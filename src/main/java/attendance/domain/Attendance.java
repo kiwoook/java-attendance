@@ -28,4 +28,12 @@ public class Attendance {
         return attendanceTime.isBefore(LocalTime.of(8, 0))
             || attendanceTime.isAfter(LocalTime.of(23, 0));
     }
+
+    public boolean check(String name, LocalDate now) {
+        return nickName.equals(name) && attendanceDate.equals(now);
+    }
+
+    public boolean hasName(String name) {
+        return nickName.equals(name);
+    }
 }
