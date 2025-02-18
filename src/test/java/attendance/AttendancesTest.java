@@ -56,6 +56,5 @@ public class AttendancesTest {
             List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
 
         assertDoesNotThrow(() -> attendances.checkName("쿠키"));
-
     }
 }

@@ -11,7 +11,6 @@ class AttendanceStatusTest {
 
     @Test
     void 월요일_5분_내인_경우_출석을_반환한다() {
-
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(13, 5);
 
@@ -33,5 +32,4 @@ class AttendanceStatusTest {
 
         assertThat(AttendanceStatus.of(localDate, localTime)).isEqualTo(AttendanceStatus.ABSENCE);
     }
-
 }
