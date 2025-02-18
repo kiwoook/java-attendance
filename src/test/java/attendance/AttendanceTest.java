@@ -33,7 +33,7 @@ public class AttendanceTest {
     }
 
     @Test
-    void 운영시간_이라면_예외가_발생하지_않는다() {
+    void 운영시간_전이라면_예외가_발생하지_않는다() {
         LocalDate weekDay = LocalDate.of(2024, 12, 1);
         LocalTime open1 = LocalTime.of(8, 0);
         LocalTime open2 = LocalTime.of(23, 0);
