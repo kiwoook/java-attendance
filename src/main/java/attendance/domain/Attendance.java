@@ -4,6 +4,7 @@ import attendance.common.ErrorMessage;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Attendance {
 
@@ -35,5 +36,17 @@ public class Attendance {
 
     public boolean hasName(String name) {
         return nickName.equals(name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Attendance that = (Attendance) o;
+        return Objects.equals(nickName, that.nickName) && Objects.equals(attendanceDate, that.attendanceDate) && Objects.equals(attendanceTime, that.attendanceTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nickName, attendanceDate, attendanceTime);
     }
 }
