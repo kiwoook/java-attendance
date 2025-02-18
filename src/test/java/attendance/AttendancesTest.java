@@ -71,4 +71,19 @@ public class AttendancesTest {
 
         assertThat(attendances.add(attendance)).isEqualTo(expect);
     }
+
+    @Test
+    void 수정할_출석_기록을_찾는다() {
+        LocalDate attendanceDate = LocalDate.of(2024, 12, 3);
+        LocalTime attendanceTime = LocalTime.of(8, 1);
+        LocalTime editTime = LocalTime.of(9, 1);
+        Attendance attendance = new Attendance("쿠키", attendanceDate, attendanceTime);
+        Attendance editedAttendance = new Attendance("쿠키", attendanceDate, editTime);
+        Attendances attendances = new Attendances(List.of(attendance));
+        Attendances expected = new Attendances(List.of(editedAttendance));
+
+
+        assertThat(attendances.editAttendance("쿠키", attendanceDate, editTime))
+            .isEqualTo(expected);
+    }
 }
