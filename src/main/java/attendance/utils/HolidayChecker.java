@@ -1,26 +1,26 @@
 package attendance.utils;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public final class HolidayChecker {
 
     private HolidayChecker() {
     }
 
-    public static boolean check(LocalDateTime localDateTime) {
-        int dayOfMonth = localDateTime.getDayOfMonth();
+    public static boolean check(LocalDate localDate) {
+        int dayOfMonth = localDate.getDayOfMonth();
 
         if (dayOfMonth == 25) {
-            return false;
+            return true;
         }
 
-        DayOfWeek dayOfWeek = localDateTime.getDayOfWeek();
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
 
         if (dayOfWeek.equals(DayOfWeek.SUNDAY) || dayOfWeek.equals(DayOfWeek.SATURDAY)) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }
