@@ -78,7 +78,7 @@ public enum AttendanceStatus {
         boolean hasAttendance = attendances.stream()
                 .anyMatch(attendance -> attendance.hasAttendance(date));
 
-        if (!hasAttendance) {
+            if (!hasAttendance) {
             map.put(AttendanceStatus.ABSENCE, map.get(AttendanceStatus.ABSENCE) + 1);
         }
     }
