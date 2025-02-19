@@ -96,16 +96,18 @@ public class AttendancesTest {
     }
 
     @Test
-    void 닉네임별_출석기록을_오름차순으로_가져온다() {
+    void 닉네임별_출석기록을_오늘날짜_까지_오름차순으로_가져온다() {
         LocalTime attendanceTime = LocalTime.of(9, 1);
+        LocalDate today = LocalDate.of(2024, 12, 16);
         List<Attendance> attendancesData = List.of(
             new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)
             , new Attendance("빙봉", LocalDate.of(2024, 12, 15), attendanceTime)
             , new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
-            , new Attendance("빙봉", LocalDate.of(2024, 12, 9), attendanceTime));
+            , new Attendance("빙봉", LocalDate.of(2024, 12, 9), attendanceTime)
+            , new Attendance("쿠키", LocalDate.of(2024, 12, 17), attendanceTime));
         Attendances attendances = new Attendances(attendancesData);
 
-        List<Attendance> attendanceRecords = attendances.findByNameWithAscend("쿠키");
+        List<Attendance> attendanceRecords = attendances.findByNameWithAscend("쿠키", today);
         assertThat(attendanceRecords).containsExactlyElementsOf(
             List.of(new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
             , new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)));

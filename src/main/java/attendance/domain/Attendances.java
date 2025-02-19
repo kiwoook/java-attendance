@@ -57,9 +57,10 @@ public class Attendances {
         return new Attendances(copiedAttendances);
     }
 
-    public List<Attendance> findByNameWithAscend(String name) {
+    public List<Attendance> findByNameWithAscend(String name, LocalDate today) {
         return attendances.stream()
             .filter(attendance -> attendance.hasName(name))
+            .filter(attendance -> attendance.IsNotAfter(today))
             .sorted()
             .toList();
     }
