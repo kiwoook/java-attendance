@@ -49,12 +49,16 @@ public class Attendance implements Comparable<Attendance> {
         return nickName.equals(name);
     }
 
-    public Optional<LocalTime> findTimeIfMatch(String name, LocalDate attendanceDate){
-        if (check(name, attendanceDate)){
+    public Optional<LocalTime> findTimeIfMatch(String name, LocalDate attendanceDate) {
+        if (check(name, attendanceDate)) {
             return Optional.of(attendanceTime);
         }
 
         return Optional.empty();
+    }
+
+    public AttendanceStatus getStatus(){
+        return AttendanceStatus.of(attendanceDate, attendanceTime);
     }
 
     @Override

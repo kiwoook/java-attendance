@@ -3,6 +3,9 @@ package attendance.domain;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Map;
 
 public enum AttendanceStatus {
     PRESENCE("출석"),
@@ -38,6 +41,15 @@ public enum AttendanceStatus {
         }
 
         return PRESENCE;
+    }
+
+    public static Map<AttendanceStatus, Integer> initMap() {
+        Map<AttendanceStatus, Integer> map = new EnumMap<>(AttendanceStatus.class);
+
+        Arrays.stream(values()).forEach(
+                key -> map.putIfAbsent(key, 0));
+
+        return map;
     }
 
     public String getKorean() {

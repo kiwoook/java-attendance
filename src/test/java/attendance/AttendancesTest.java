@@ -12,7 +12,7 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-public class AttendancesTest {
+class AttendancesTest {
 
     @Test
     void 이미_출석_기록이_있는_경우_true를_반환한다() {
@@ -100,16 +100,34 @@ public class AttendancesTest {
         LocalTime attendanceTime = LocalTime.of(9, 1);
         LocalDate today = LocalDate.of(2024, 12, 16);
         List<Attendance> attendancesData = List.of(
-            new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)
-            , new Attendance("빙봉", LocalDate.of(2024, 12, 15), attendanceTime)
-            , new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
-            , new Attendance("빙봉", LocalDate.of(2024, 12, 9), attendanceTime)
-            , new Attendance("쿠키", LocalDate.of(2024, 12, 17), attendanceTime));
+                new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)
+                , new Attendance("빙봉", LocalDate.of(2024, 12, 15), attendanceTime)
+                , new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
+                , new Attendance("빙봉", LocalDate.of(2024, 12, 9), attendanceTime)
+                , new Attendance("쿠키", LocalDate.of(2024, 12, 17), attendanceTime));
         Attendances attendances = new Attendances(attendancesData);
 
-        List<Attendance> attendanceRecords = attendances.findByNameWithAscend("쿠키", today);
+        List<Attendance> attendanceRecords = attendances.findByNameAndDateWithAscend("쿠키", today);
         assertThat(attendanceRecords).containsExactlyElementsOf(
-            List.of(new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
-            , new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)));
+                List.of(new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
+                        , new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)));
     }
+
+    @Test
+    void 닉네임별_출결_결과를_반환한다() {
+        LocalDate today = LocalDate.of(2024, 12, 18);
+        List<Attendance> attendancesData = List.of(
+                new Attendance("쿠키", LocalDate.of(2024, 12, 10), LocalTime.of(10, 1))
+                , new Attendance("쿠키", LocalDate.of(2024, 12, 11), LocalTime.of(10, 6))
+                , new Attendance("쿠키", LocalDate.of(2024, 12, 13), LocalTime.of(10, 31))
+                , new Attendance("쿠키", LocalDate.of(2024, 12, 17), LocalTime.of(10, 31)));
+
+        Attendances attendances = new Attendances(attendancesData);
+
+        List<Integer> expect = List.of(1, 1, 2);
+
+        assertThat(attendances.calculateByNameAndDate("쿠키", today)).isEqualTo(expect);
+    }
+
+
 }
