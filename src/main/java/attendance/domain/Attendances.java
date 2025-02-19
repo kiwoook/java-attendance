@@ -1,17 +1,13 @@
 package attendance.domain;
 
 import attendance.common.ErrorMessage;
-import attendance.utils.HolidayChecker;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class Attendances {
 
@@ -65,27 +61,14 @@ public class Attendances {
     public List<Attendance> findByNameAndDateWithAscend(String name, LocalDate today) {
         return attendances.stream()
                 .filter(attendance -> attendance.hasName(name))
-                .filter(attendance -> attendance.IsNotAfter(today))
+                .filter(attendance -> attendance.isNotAfter(today))
                 .sorted()
                 .toList();
     }
 
-    //TODO: 로직 수정
     public List<Integer> calculateByNameAndDate(String name, LocalDate today) {
         List<Attendance> attendanceList = findByNameAndDateWithAscend(name, today);
-        Map<AttendanceStatus, Integer> map = AttendanceStatus.initMap();
-
-        for (int i = 1; i <= 31; i++) {
-            LocalDate date = LocalDate.of(2024, 12, i);
-            if (!HolidayChecker.check(date)) {
-                boolean hasAttendance = attendanceList.stream()
-                    .anyMatch(attendance -> attendance.hasAttendance(date));
-
-                if (!hasAttendance) {
-                    map.put(AttendanceStatus.ABSENCE, map.get(AttendanceStatus.ABSENCE) + 1);
-                }
-            }
-        }
+        Map<AttendanceStatus, Integer> map = AttendanceStatus.calculateAbsencesUntil(today, attendanceList);
 
         for (Attendance attendance : attendanceList) {
             AttendanceStatus status = attendance.getStatus();
