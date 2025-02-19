@@ -1,10 +1,9 @@
 package attendance;
 
-import attendance.domain.Attendances;
 import attendance.service.AttendanceService;
 import attendance.view.InputView;
 import attendance.view.OutputView;
-import controller.AttendanceController;
+import attendance.controller.AttendanceController;
 
 public class Application {
 

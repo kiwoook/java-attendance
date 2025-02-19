@@ -23,9 +23,5 @@ public class AttendanceService {
         attendances = new Attendances(convertedAttendances);
     }
 
-    public void validateHoliday(LocalDate now) {
-        if (HolidayChecker.check(now)) {
-//            service
-        }
-    }
+    public checkN
 }
