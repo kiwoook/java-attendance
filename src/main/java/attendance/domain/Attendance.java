@@ -63,6 +63,10 @@ public class Attendance implements Comparable<Attendance> {
         return AttendanceStatus.of(attendanceDate, attendanceTime);
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
     @Override
     public int compareTo(Attendance o) {
         return this.attendanceDate.compareTo(o.attendanceDate);

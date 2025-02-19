@@ -78,6 +78,12 @@ public class Attendances {
         return map.values().stream().toList();
     }
 
+    public List<String> getCrewNames() {
+        return attendances.stream()
+            .map(Attendance::getNickName)
+            .distinct()
+            .toList();
+    }
 
     @Override
     public boolean equals(Object o) {

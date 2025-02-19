@@ -129,5 +129,17 @@ class AttendancesTest {
         assertThat(attendances.calculateByNameAndDate("쿠키", today)).isEqualTo(expect);
     }
 
+    @Test
+    void 크루들의_이름_목록을_가져온다() {
+        LocalTime attendanceTime = LocalTime.of(9, 1);
+        List<Attendance> attendancesData = List.of(
+            new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)
+            , new Attendance("빙봉", LocalDate.of(2024, 12, 15), attendanceTime)
+            , new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
+            , new Attendance("빙봉", LocalDate.of(2024, 12, 9), attendanceTime)
+            , new Attendance("쿠키", LocalDate.of(2024, 12, 17), attendanceTime));
+        Attendances attendances = new Attendances(attendancesData);
 
+        assertThat(attendances.getCrewNames()).containsExactlyElementsOf(List.of("쿠키", "빙봉"));
+    }
 }
