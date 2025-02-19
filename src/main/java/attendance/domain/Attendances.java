@@ -57,6 +57,13 @@ public class Attendances {
         return new Attendances(copiedAttendances);
     }
 
+    public List<Attendance> findByNameWithAscend(String name) {
+        return attendances.stream()
+            .filter(attendance -> attendance.hasName(name))
+            .sorted()
+            .toList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
