@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Attendance {
+public class Attendance implements Comparable<Attendance> {
 
     private static final LocalDate DECEMBER_START_DATE = LocalDate.of(2024, 12, 1);
     private static final LocalDate DECEMBER_END_DATE = LocalDate.of(2024, 12, 31);
@@ -57,8 +57,9 @@ public class Attendance {
         return Optional.empty();
     }
 
-    public LocalTime getAttendanceTime() {
-        return attendanceTime;
+    @Override
+    public int compareTo(Attendance o) {
+        return this.attendanceDate.compareTo(o.attendanceDate);
     }
 
     @Override

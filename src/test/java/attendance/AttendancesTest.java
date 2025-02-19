@@ -94,4 +94,20 @@ public class AttendancesTest {
         assertThat(attendances.editAttendance("쿠키", attendanceDate, editTime))
                 .isEqualTo(expected);
     }
+
+    @Test
+    void 닉네임별_출석기록을_오름차순으로_가져온다() {
+        LocalTime attendanceTime = LocalTime.of(9, 1);
+        List<Attendance> attendancesData = List.of(
+            new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)
+            , new Attendance("빙봉", LocalDate.of(2024, 12, 15), attendanceTime)
+            , new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
+            , new Attendance("빙봉", LocalDate.of(2024, 12, 9), attendanceTime));
+        Attendances attendances = new Attendances(attendancesData);
+
+        List<Attendance> attendanceRecords = attendances.findByNameWithAscend("쿠키");
+        assertThat(attendanceRecords).containsExactlyElementsOf(
+            List.of(new Attendance("쿠키", LocalDate.of(2024, 12, 9), attendanceTime)
+            , new Attendance("쿠키", LocalDate.of(2024, 12, 15), attendanceTime)));
+    }
 }
