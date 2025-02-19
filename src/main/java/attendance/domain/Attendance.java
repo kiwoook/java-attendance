@@ -68,8 +68,8 @@ public class Attendance implements Comparable<Attendance> {
         return this.attendanceDate.compareTo(o.attendanceDate);
     }
 
-    public boolean isNotAfter(LocalDate today) {
-        return !this.attendanceDate.isAfter(today);
+    public boolean isBefore(LocalDate today) {
+        return this.attendanceDate.isBefore(today);
     }
 
     public boolean hasAttendance(LocalDate date) {
