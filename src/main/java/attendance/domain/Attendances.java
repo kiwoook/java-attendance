@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Attendances {
 
@@ -36,14 +37,21 @@ public class Attendances {
         return new Attendances(newAttendances);
     }
 
-    // TODO: 기존의 기록을 찾는다.
+    public LocalTime findLocalTimeByNicknameAndDate(String name, LocalDate attendanceDate) {
+        return attendances.stream()
+                .map(attendance -> attendance.findTimeIfMatch(name, attendanceDate))
+                .flatMap(Optional::stream) 
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_ATTENDANCE_RECORD.getMessage()));
+    }
+
     public Attendances editAttendance(String name, LocalDate attendanceDate, LocalTime attendanceTime) {
         Attendance findAttendance = attendances.stream()
-            .filter(attendance -> attendance.check(name, attendanceDate))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_ATTENDANCE_RECORD.getMessage()));
+                .filter(attendance -> attendance.check(name, attendanceDate))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_ATTENDANCE_RECORD.getMessage()));
 
-       List<Attendance> copiedAttendances = new ArrayList<>(attendances);
+        List<Attendance> copiedAttendances = new ArrayList<>(attendances);
         int index = copiedAttendances.indexOf(findAttendance);
         copiedAttendances.set(index, new Attendance(name, attendanceDate, attendanceTime));
         return new Attendances(copiedAttendances);

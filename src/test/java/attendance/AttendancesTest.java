@@ -1,18 +1,16 @@
 package attendance;
 
-import attendance.common.ErrorMessage;
-import attendance.domain.Attendance;
-import attendance.domain.Attendances;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+import attendance.common.ErrorMessage;
+import attendance.domain.Attendance;
+import attendance.domain.Attendances;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import org.junit.jupiter.api.Test;
 
 public class AttendancesTest {
 
@@ -21,7 +19,7 @@ public class AttendancesTest {
         LocalDate attendanceDate = LocalDate.of(2024, 12, 3);
         LocalTime attendanceTime = LocalTime.of(8, 1);
         Attendances attendances = new Attendances(
-            List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
+                List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
 
         assertThat(attendances.checkAttendance("쿠키", attendanceDate)).isTrue();
     }
@@ -32,7 +30,7 @@ public class AttendancesTest {
         LocalTime attendanceTime = LocalTime.of(8, 1);
         LocalDate today = LocalDate.of(2024, 12, 31);
         Attendances attendances = new Attendances(
-            List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
+                List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
 
         assertThat(attendances.checkAttendance("쿠키", today)).isFalse();
     }
@@ -42,11 +40,11 @@ public class AttendancesTest {
         LocalDate attendanceDate = LocalDate.of(2024, 12, 3);
         LocalTime attendanceTime = LocalTime.of(8, 1);
         Attendances attendances = new Attendances(
-            List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
+                List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
 
         assertThatThrownBy(() -> attendances.checkName("철수"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage(ErrorMessage.NO_NAME.getMessage());
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NO_NAME.getMessage());
     }
 
     @Test
@@ -54,13 +52,13 @@ public class AttendancesTest {
         LocalDate attendanceDate = LocalDate.of(2024, 12, 3);
         LocalTime attendanceTime = LocalTime.of(8, 1);
         Attendances attendances = new Attendances(
-            List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
+                List.of(new Attendance("쿠키", attendanceDate, attendanceTime)));
 
         assertDoesNotThrow(() -> attendances.checkName("쿠키"));
     }
 
     @Test
-    void 출석을_저장한다(){
+    void 출석을_저장한다() {
         Attendances attendances = new Attendances(List.of());
         LocalDate attendanceDate = LocalDate.of(2024, 12, 3);
         LocalTime attendanceTime = LocalTime.of(8, 1);
@@ -73,6 +71,17 @@ public class AttendancesTest {
     }
 
     @Test
+    void 이름과_날짜를_전달해_해당_객체의_시간을_받아온다() {
+        String name = "쿠키";
+        LocalDate attendanceDate = LocalDate.of(2024, 12, 3);
+        LocalTime attendanceTime = LocalTime.of(8, 1);
+        Attendances attendances = new Attendances(
+                List.of(new Attendance(name, attendanceDate, attendanceTime)));
+
+        assertThat(attendances.findLocalTimeByNicknameAndDate(name, attendanceDate)).isEqualTo(attendanceTime);
+    }
+
+    @Test
     void 수정할_출석_기록을_찾는다() {
         LocalDate attendanceDate = LocalDate.of(2024, 12, 3);
         LocalTime attendanceTime = LocalTime.of(8, 1);
@@ -82,8 +91,7 @@ public class AttendancesTest {
         Attendances attendances = new Attendances(List.of(attendance));
         Attendances expected = new Attendances(List.of(editedAttendance));
 
-
         assertThat(attendances.editAttendance("쿠키", attendanceDate, editTime))
-            .isEqualTo(expected);
+                .isEqualTo(expected);
     }
 }
