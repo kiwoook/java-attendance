@@ -7,15 +7,15 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public class AttendancePenaltyTest {
+class AttendancePenaltyTest {
 
     @Test
     void 면담_대상자를_확인한다() {
         List<Integer> result1 = List.of(3, 5, 2);
         List<Integer> result2 = List.of(0, 7, 1);
 
-        assertThat(AttendancePenalty.findPenalty(result1)).isEqualTo("면담");
-        assertThat(AttendancePenalty.findPenalty(result2)).isEqualTo("면담");
+        assertThat(AttendancePenalty.findPenalty(result1).getMessage()).isEqualTo("면담");
+        assertThat(AttendancePenalty.findPenalty(result2).getMessage()).isEqualTo("면담");
     }
 
     @Test
@@ -23,8 +23,8 @@ public class AttendancePenaltyTest {
         List<Integer> result1 = List.of(3, 15, 1);
         List<Integer> result2 = List.of(0, 2, 6);
 
-        assertThat(AttendancePenalty.findPenalty(result1)).isEqualTo("제적");
-        assertThat(AttendancePenalty.findPenalty(result2)).isEqualTo("제적");
+        assertThat(AttendancePenalty.findPenalty(result1).getMessage()).isEqualTo("제적");
+        assertThat(AttendancePenalty.findPenalty(result2).getMessage()).isEqualTo("제적");
     }
 
     @Test
@@ -32,7 +32,7 @@ public class AttendancePenaltyTest {
         List<Integer> result1 = List.of(3, 6, 0);
         List<Integer> result2 = List.of(0, 2, 2);
 
-        assertThat(AttendancePenalty.findPenalty(result1)).isEqualTo("경고");
-        assertThat(AttendancePenalty.findPenalty(result2)).isEqualTo("경고");
+        assertThat(AttendancePenalty.findPenalty(result1).getMessage()).isEqualTo("경고");
+        assertThat(AttendancePenalty.findPenalty(result2).getMessage()).isEqualTo("경고");
     }
 }

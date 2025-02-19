@@ -1,7 +1,6 @@
 package attendance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import attendance.common.ErrorMessage;
@@ -25,6 +24,5 @@ class OptionTest {
         assertThatThrownBy(() -> Option.find(input))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.INVALID_OPTION_INPUT.getMessage());
-
     }
 }
