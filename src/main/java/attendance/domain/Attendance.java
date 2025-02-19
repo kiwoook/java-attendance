@@ -1,5 +1,8 @@
 package attendance.domain;
 
+import static attendance.common.Constants.DECEMBER_END_DATE;
+import static attendance.common.Constants.DECEMBER_START_DATE;
+
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,8 +11,7 @@ import java.util.Optional;
 
 public class Attendance implements Comparable<Attendance> {
 
-    private static final LocalDate DECEMBER_START_DATE = LocalDate.of(2024, 12, 1);
-    private static final LocalDate DECEMBER_END_DATE = LocalDate.of(2024, 12, 31);
+
     private static final LocalTime OPEN_TIME = LocalTime.of(8, 0);
     private static final LocalTime CLOSED_TIME = LocalTime.of(23, 0);
 
@@ -66,7 +68,7 @@ public class Attendance implements Comparable<Attendance> {
         return this.attendanceDate.compareTo(o.attendanceDate);
     }
 
-    public boolean IsNotAfter(LocalDate today) {
+    public boolean isNotAfter(LocalDate today) {
         return !this.attendanceDate.isAfter(today);
     }
 

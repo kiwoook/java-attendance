@@ -1,10 +1,14 @@
 package attendance.domain;
 
+import static attendance.common.Constants.DECEMBER_START_DATE;
+
+import attendance.utils.HolidayChecker;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public enum AttendanceStatus {
@@ -50,6 +54,33 @@ public enum AttendanceStatus {
                 key -> map.putIfAbsent(key, 0));
 
         return map;
+    }
+
+    public static Map<AttendanceStatus, Integer> calculateAbsencesUntil(LocalDate today, List<Attendance> attendances) {
+        Map<AttendanceStatus, Integer> map = initMap();
+        LocalDate currentDate = DECEMBER_START_DATE;
+
+        while (currentDate.isBefore(today)) {
+            if (HolidayChecker.check(currentDate)) {
+                currentDate = currentDate.plusDays(1);
+                continue;
+            }
+
+            incrementAbsence(currentDate, attendances, map);
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return map;
+    }
+
+    private static void incrementAbsence(LocalDate date, List<Attendance> attendances,
+                                         Map<AttendanceStatus, Integer> map) {
+        boolean hasAttendance = attendances.stream()
+                .anyMatch(attendance -> attendance.hasAttendance(date));
+
+        if (!hasAttendance) {
+            map.put(AttendanceStatus.ABSENCE, map.get(AttendanceStatus.ABSENCE) + 1);
+        }
     }
 
     public String getKorean() {

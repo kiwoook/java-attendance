@@ -124,7 +124,7 @@ class AttendancesTest {
 
         Attendances attendances = new Attendances(attendancesData);
 
-        List<Integer> expect = List.of(1, 1, 2);
+        List<Integer> expect = List.of(1, 1, 10);
 
         assertThat(attendances.calculateByNameAndDate("쿠키", today)).isEqualTo(expect);
     }
