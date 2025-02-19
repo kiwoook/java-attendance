@@ -61,7 +61,7 @@ public class Attendances {
     public List<Attendance> findByNameAndDateWithAscend(String name, LocalDate today) {
         return attendances.stream()
                 .filter(attendance -> attendance.hasName(name))
-                .filter(attendance -> attendance.isNotAfter(today))
+                .filter(attendance -> attendance.isBefore(today))
                 .sorted()
                 .toList();
     }
