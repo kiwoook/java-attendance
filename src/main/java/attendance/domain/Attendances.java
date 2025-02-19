@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class Attendances {
     public LocalTime findLocalTimeByNicknameAndDate(String name, LocalDate attendanceDate) {
         return attendances.stream()
                 .map(attendance -> attendance.findTimeIfMatch(name, attendanceDate))
-                .flatMap(Optional::stream) 
+                .flatMap(Optional::stream)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_ATTENDANCE_RECORD.getMessage()));
     }
@@ -57,13 +58,26 @@ public class Attendances {
         return new Attendances(copiedAttendances);
     }
 
-    public List<Attendance> findByNameWithAscend(String name, LocalDate today) {
+    public List<Attendance> findByNameAndDateWithAscend(String name, LocalDate today) {
         return attendances.stream()
-            .filter(attendance -> attendance.hasName(name))
-            .filter(attendance -> attendance.IsNotAfter(today))
-            .sorted()
-            .toList();
+                .filter(attendance -> attendance.hasName(name))
+                .filter(attendance -> attendance.IsNotAfter(today))
+                .sorted()
+                .toList();
     }
+
+    public List<Integer> calculateByNameAndDate(String name, LocalDate today) {
+        List<Attendance> attendanceList = findByNameAndDateWithAscend(name, today);
+        Map<AttendanceStatus, Integer> map = AttendanceStatus.initMap();
+
+        for (Attendance attendance : attendanceList) {
+            AttendanceStatus status = attendance.getStatus();
+            map.merge(status, 1, Integer::sum);
+        }
+
+        return map.values().stream().toList();
+    }
+
 
     @Override
     public boolean equals(Object o) {
