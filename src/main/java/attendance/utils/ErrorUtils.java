@@ -7,7 +7,7 @@ public final class ErrorUtils {
     private ErrorUtils() {
     }
 
-    public static void executeWithError(Runnable processFunction) {
+    public static void executeWithPrintError(Runnable processFunction) {
         try {
             processFunction.run();
         } catch (IllegalArgumentException e) {

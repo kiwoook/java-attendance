@@ -14,6 +14,6 @@ public class Application {
                 new InputView(), new OutputView(), new AttendanceService(), new DateGeneratorImpl()
         );
 
-        ErrorUtils.executeWithError(controller::run);
+        ErrorUtils.executeWithPrintError(controller::run);
     }
 }
