@@ -12,12 +12,10 @@ import java.util.function.Predicate;
 
 public enum AttendancePenalty {
 
-
     EXPULSION("제적", lateCont -> lateCont >= EXPULSION_MINIMUM),
     COUNSELING("면담", lateCount -> lateCount >= COUNSELING_MINIMUM && lateCount < EXPULSION_MINIMUM),
     WARNING("경고", lateCount -> lateCount == WARING_MAXIMUM),
     NONE("없음", lateCount -> lateCount < WARING_MAXIMUM);
-
 
     private final String message;
     private final Predicate<Integer> rule;

@@ -7,6 +7,7 @@ import attendance.domain.AttendanceStatus;
 import attendance.domain.Attendances;
 import attendance.domain.PenaltyCrew;
 import attendance.dto.AttendanceInfoDto;
+import attendance.dto.EditResponseDto;
 import attendance.dto.FileRequestDto;
 import attendance.dto.PenaltyCrewDto;
 import attendance.utils.FileParser;
@@ -39,6 +40,7 @@ public class AttendanceService {
     }
 
     public void insertAttendance(String name, LocalDate today, LocalTime time) {
+        checkByNameAndDate(name, today);
         Attendance attendance = new Attendance(name, today, time);
         this.attendances = attendances.add(attendance);
     }
@@ -47,11 +49,12 @@ public class AttendanceService {
         return AttendanceStatus.of(date, time).getKorean();
     }
 
-    // TODO 책임 분리가 필요함
-    public LocalTime editAttendance(String name, LocalDate date, LocalTime editTime) {
-        LocalTime oldTime = attendances.findLocalTimeByNameAndDate(name, date);
-        this.attendances = attendances.editAttendance(name, date, editTime);
-        return oldTime;
+    public EditResponseDto edit(String name, LocalDate date, LocalTime editTime) {
+        LocalTime oldTime = editAttendance(name, date, editTime);
+        String oldStatus = getAttendanceStatus(date, oldTime);
+        String editStatus = getAttendanceStatus(date, editTime);
+
+        return new EditResponseDto(date, oldTime, editTime, oldStatus, editStatus);
     }
 
     public Map<LocalDate, AttendanceInfoDto> getAttendanceInfos(String name, LocalDate today) {
@@ -66,11 +69,11 @@ public class AttendanceService {
         return map;
     }
 
-    public List<Integer> getAttendanceCounts(String name, LocalDate today){
+    public List<Integer> getAttendanceCounts(String name, LocalDate today) {
         return attendances.calculateByNameAndDate(name, today);
     }
 
-    public String getAttendancePenalty(List<Integer> counts){
+    public String getAttendancePenalty(List<Integer> counts) {
         return AttendancePenalty.find(counts)
                 .getMessage();
     }
@@ -79,18 +82,30 @@ public class AttendanceService {
     public List<PenaltyCrewDto> getCrewsName(LocalDate today) {
         List<String> crewNames = attendances.getCrewNames();
         List<PenaltyCrew> penaltyCrews = new ArrayList<>();
+
         for (String crewName : crewNames) {
-            List<Integer> counts = attendances.calculateByNameAndDate(crewName, today);
-            if (AttendancePenalty.find(counts) == AttendancePenalty.NONE) {
-                continue;
-            }
-            penaltyCrews.add(
-                new PenaltyCrew(crewName, counts.get(Constants.ABSENCE_INDEX), counts.get(Constants.LATE_INDEX))
-            );
+            addPenaltyCrew(crewName, today, penaltyCrews);
         }
+
         return penaltyCrews.stream()
-            .sorted()
-            .map(PenaltyCrewDto::toDto)
-            .toList();
+                .sorted()
+                .map(PenaltyCrewDto::toDto)
+                .toList();
+    }
+
+    private LocalTime editAttendance(String name, LocalDate date, LocalTime editTime) {
+        LocalTime oldTime = attendances.findLocalTimeByNameAndDate(name, date);
+        this.attendances = attendances.editAttendance(name, date, editTime);
+        return oldTime;
+    }
+
+    private void addPenaltyCrew(String crewName, LocalDate today, List<PenaltyCrew> penaltyCrews) {
+        List<Integer> counts = attendances.calculateByNameAndDate(crewName, today);
+        if (AttendancePenalty.find(counts) == AttendancePenalty.NONE) {
+            return;
+        }
+        penaltyCrews.add(
+                new PenaltyCrew(crewName, counts.get(Constants.ABSENCE_INDEX), counts.get(Constants.LATE_INDEX))
+        );
     }
 }

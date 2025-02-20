@@ -1,6 +1,5 @@
 package attendance.domain;
 
-import java.util.List;
 import java.util.Objects;
 
 public class PenaltyCrew implements Comparable<PenaltyCrew> {
@@ -15,10 +14,9 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
         this.lateCount = lateCount;
         this.absenceCount = absenceCount;
         this.name = name;
-        this.point = absenceCount * 3 + lateCount ;
+        this.point = absenceCount * 3 + lateCount;
         this.attendanceStatus = AttendancePenalty.find(absenceCount, lateCount);
     }
-
 
     @Override
     public int compareTo(PenaltyCrew o) {
@@ -57,16 +55,5 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
     @Override
     public int hashCode() {
         return Objects.hash(name, absenceCount, lateCount, point, attendanceStatus);
-    }
-
-    @Override
-    public String toString() {
-        return "PenaltyCrew{" +
-                "name='" + name + '\'' +
-                ", absenceCount=" + absenceCount +
-                ", lateCount=" + lateCount +
-                ", point=" + point +
-                ", attendanceStatus=" + attendanceStatus +
-                '}';
     }
 }
