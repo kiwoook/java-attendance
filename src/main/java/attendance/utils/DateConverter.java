@@ -22,9 +22,11 @@ public class DateConverter {
     }
 
     public static String convertToString(LocalDate date, LocalTime time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        String formattedTime = time.format(formatter);
+        return convertToString(date) + " " + convertToString(time);
+    }
 
-        return convertToString(date) + " " + formattedTime;
+    public static String convertToString(LocalTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return time.format(formatter);
     }
 }

@@ -10,7 +10,8 @@ public enum ErrorMessage {
     NO_ATTENDANCE_RECORD("출석 기록을 찾을 수 없습니다."),
     INVALID_DATE("출석기록하는 달이 아닙니다."),
     NOT_OPEN_DAY("%s은 등교일이 아닙니다."),
-    INVALID_TIME_FORMAT_INPUT("HH:mm 형식을 지켜 작성해주세요.");
+    INVALID_TIME_FORMAT_INPUT("HH:mm 형식을 지켜 작성해주세요."),
+    INVALID_FORMAT("올바른 입력 형식이 아닙니다.");
 
     private static final String PREFIX = "[ERROR] ";
 
