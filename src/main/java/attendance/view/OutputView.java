@@ -7,6 +7,7 @@ import static attendance.common.Constants.LINE_SEPARATOR;
 import static attendance.common.Constants.PRESENCE_INDEX;
 
 import attendance.dto.AttendanceInfoDto;
+import attendance.dto.PenaltyCrewDto;
 import attendance.utils.DateConverter;
 import attendance.utils.HolidayChecker;
 import java.time.LocalDate;
@@ -42,7 +43,6 @@ public class OutputView {
         System.out.println(sb);
     }
 
-
     public void attendanceResult(String nickName, Map<LocalDate, AttendanceInfoDto> infoDtoMap, List<Integer> counts,
                                  String penalty, LocalDate today) {
         System.out.println("이번 달 " + nickName + "의 출석 기록입니다." + LINE_SEPARATOR);
@@ -57,6 +57,13 @@ public class OutputView {
 
         if (penalty != null) {
             System.out.println(penalty + " 대상자입니다.");
+        }
+    }
+
+    public void penaltyCrews(List<PenaltyCrewDto> crewsInfos) {
+        for (PenaltyCrewDto crewsInfo : crewsInfos) {
+            System.out.printf("- %s: 결석 %d회, 지각 %d회 %s%n",
+                crewsInfo.name(), crewsInfo.absenceCount(), crewsInfo.lateCount(), wrapping(crewsInfo.penaltyMessage()));
         }
     }
 

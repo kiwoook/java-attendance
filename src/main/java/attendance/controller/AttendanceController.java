@@ -3,6 +3,7 @@ package attendance.controller;
 import attendance.common.ErrorMessage;
 import attendance.domain.Attendances;
 import attendance.dto.AttendanceInfoDto;
+import attendance.dto.PenaltyCrewDto;
 import attendance.service.AttendanceService;
 import attendance.utils.DateGenerator;
 import attendance.utils.HolidayChecker;
@@ -52,7 +53,7 @@ public class AttendanceController {
         }
 
         if (option == Option.FOUR) {
-            optionFour();
+            optionFour(today);
         }
     }
 
@@ -99,9 +100,8 @@ public class AttendanceController {
         outputView.attendanceResult(nickname, dtoMap, counts, penalty, today);
     }
 
-    private void optionFour() {
-
+    private void optionFour(LocalDate today) {
+        List<PenaltyCrewDto> crewsInfos = service.getCrewsName(today);
+        outputView.penaltyCrews(crewsInfos);
     }
-
-
 }
