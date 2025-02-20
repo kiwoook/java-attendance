@@ -21,11 +21,11 @@ public enum AttendancePenalty {
         this.rule = rule;
     }
 
-    public static AttendancePenalty findPenalty(List<Integer> result) {
-        return findPenalty(result.get(ABSENCE_INDEX), result.get(LATE_INDEX));
+    public static AttendancePenalty find(List<Integer> result) {
+        return find(result.get(ABSENCE_INDEX), result.get(LATE_INDEX));
     }
 
-    public static AttendancePenalty findPenalty(int absenceCount, int lateCount){
+    public static AttendancePenalty find(int absenceCount, int lateCount){
         int totalCount = absenceCount + lateCount / 3;
 
         return Arrays.stream(values())

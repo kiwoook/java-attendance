@@ -1,6 +1,7 @@
 package attendance.controller;
 
 import attendance.common.ErrorMessage;
+import attendance.domain.Attendances;
 import attendance.dto.AttendanceInfoDto;
 import attendance.service.AttendanceService;
 import attendance.utils.DateGenerator;
@@ -10,6 +11,8 @@ import attendance.view.InputView;
 import attendance.view.OutputView;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 
 public class AttendanceController {
 
@@ -35,9 +38,9 @@ public class AttendanceController {
         }
     }
 
-    private void chooseOption(Option option, LocalDate now) {
+    private void chooseOption(Option option, LocalDate today) {
         if (option == Option.ONE) {
-            optionOne(now);
+            optionOne(today);
         }
 
         if (option == Option.TWO) {
@@ -45,7 +48,7 @@ public class AttendanceController {
         }
 
         if (option == Option.THREE) {
-            optionThree();
+            optionThree(today);
         }
 
         if (option == Option.FOUR) {
@@ -59,7 +62,7 @@ public class AttendanceController {
 //            outputView.printError(today);
             throw new IllegalStateException(ErrorMessage.getFormattedMessage(today));
         }
-        String nickname = inputView.readNickName();
+        String nickname = inputView.readNickname();
         service.findName(nickname);
 
         LocalTime localTime = inputView.readTime();
@@ -85,8 +88,15 @@ public class AttendanceController {
         outputView.editResult(new AttendanceInfoDto(date, oldTime, oldStatus), editTime, attendanceStatus);
     }
 
-    private void optionThree() {
+    private void optionThree(LocalDate today) {
+        String nickname = inputView.readNickname();
+        service.findName(nickname);
 
+        Map<LocalDate, AttendanceInfoDto> dtoMap = service.getAttendanceInfos(nickname, today);
+        List<Integer> counts = service.getAttendanceCounts(nickname, today);
+        String penalty = service.getAttendancePenalty(counts);
+
+        outputView.attendanceResult(nickname, dtoMap, counts, penalty, today);
     }
 
     private void optionFour() {

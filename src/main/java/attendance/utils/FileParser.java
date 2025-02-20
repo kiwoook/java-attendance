@@ -24,7 +24,6 @@ public class FileParser {
             br.readLine();
             String line;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
                 String[] split = line.split(",");
                 String nickName = split[0];
                 LocalDateTime dateTime = LocalDateTime.parse(split[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

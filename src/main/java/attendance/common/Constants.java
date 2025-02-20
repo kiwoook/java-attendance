@@ -11,6 +11,8 @@ public final class Constants {
     public static final int LATE_INDEX = 1;
     public static final int ABSENCE_INDEX = 2;
 
+    public static final String LINE_SEPARATOR = System.lineSeparator();
+
     private Constants() {
     }
 }
