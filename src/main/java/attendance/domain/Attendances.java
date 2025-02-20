@@ -38,7 +38,7 @@ public class Attendances {
         return new Attendances(newAttendances);
     }
 
-    public LocalTime findLocalTimeByNicknameAndDate(String name, LocalDate attendanceDate) {
+    public LocalTime findLocalTimeByNameAndDate(String name, LocalDate attendanceDate) {
         return attendances.stream()
                 .map(attendance -> attendance.findTimeIfMatch(name, attendanceDate))
                 .flatMap(Optional::stream)
