@@ -1,13 +1,12 @@
 package attendance.service;
 
-import attendance.common.ErrorMessage;
 import attendance.domain.Attendance;
+import attendance.domain.AttendanceStatus;
 import attendance.domain.Attendances;
 import attendance.dto.FileRequestDto;
 import attendance.utils.FileParser;
-import attendance.utils.HolidayChecker;
-
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class AttendanceService {
@@ -18,10 +17,28 @@ public class AttendanceService {
         FileParser fileParser = new FileParser("src/main/java/resources/attendances.csv");
         List<FileRequestDto> dtos = fileParser.read();
         List<Attendance> convertedAttendances = dtos.stream()
-            .map(dto -> new Attendance(dto.name(), dto.localDateTime().toLocalDate(), dto.localDateTime().toLocalTime()))
-            .toList();
+                .map(dto -> new Attendance(dto.name(), dto.localDateTime().toLocalDate(),
+                        dto.localDateTime().toLocalTime()))
+                .toList();
         attendances = new Attendances(convertedAttendances);
     }
 
-    public checkN
+    public void findName(String name) {
+        attendances.checkName(name);
+    }
+
+    public void checkByNameAndDate(String name, LocalDate today) {
+        attendances.findLocalTimeByNameAndDate(name, today);
+    }
+
+    public void insertAttendance(String name, LocalDate today, LocalTime time) {
+        Attendance attendance = new Attendance(name, today, time);
+        this.attendances = attendances.add(attendance);
+    }
+
+    public String getAttendanceStatus(LocalDate date, LocalTime time) {
+        return AttendanceStatus.of(date, time).getKorean();
+    }
+
+
 }

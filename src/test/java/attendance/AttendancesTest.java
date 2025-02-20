@@ -78,7 +78,7 @@ class AttendancesTest {
         Attendances attendances = new Attendances(
                 List.of(new Attendance(name, attendanceDate, attendanceTime)));
 
-        assertThat(attendances.findLocalTimeByNicknameAndDate(name, attendanceDate)).isEqualTo(attendanceTime);
+        assertThat(attendances.findLocalTimeByNameAndDate(name, attendanceDate)).isEqualTo(attendanceTime);
     }
 
     @Test
