@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public enum AttendanceStatus {
+
     PRESENCE("출석"),
     LATE("지각"),
     ABSENCE("결석");
@@ -20,7 +21,6 @@ public enum AttendanceStatus {
     private static final LocalTime NOT_MONDAY_START_TIME = LocalTime.of(10, 0);
     private static final int ABSENCE_BOUNDARY = 30;
     private static final int LATE_BOUNDARY = 5;
-
 
     private final String korean;
 

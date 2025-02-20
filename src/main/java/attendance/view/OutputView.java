@@ -7,6 +7,7 @@ import static attendance.common.Constants.LINE_SEPARATOR;
 import static attendance.common.Constants.PRESENCE_INDEX;
 
 import attendance.dto.AttendanceInfoDto;
+import attendance.dto.EditResponseDto;
 import attendance.dto.PenaltyCrewDto;
 import attendance.utils.DateConverter;
 import attendance.utils.HolidayChecker;
@@ -30,15 +31,15 @@ public class OutputView {
         System.out.println(time + " " + wrapping(infoDto.statusMessage()));
     }
 
-    public void editResult(AttendanceInfoDto infoDto, LocalTime editTime, String attendanceStatus) {
-        String oldTime = DateConverter.convertToString(infoDto.attendanceDate(), infoDto.attendanceTime());
+    public void editResult(EditResponseDto responseDto) {
+        String oldTime = DateConverter.convertToString(responseDto.attendanceDate(), responseDto.oldTime());
         StringBuilder sb = new StringBuilder();
         sb.append(oldTime)
                 .append(" ")
-                .append(wrapping(infoDto.statusMessage()))
+                .append(wrapping(responseDto.oldStatus()))
                 .append(" -> ")
-                .append(DateConverter.convertToString(editTime))
-                .append(wrapping(attendanceStatus))
+                .append(DateConverter.convertToString(responseDto.editTime()))
+                .append(wrapping(responseDto.editStatus()))
                 .append(" 수정완료!");
         System.out.println(sb);
     }
