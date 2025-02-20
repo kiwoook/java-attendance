@@ -40,5 +40,12 @@ public class AttendanceService {
         return AttendanceStatus.of(date, time).getKorean();
     }
 
+    // TODO 책임 분리가 필요함
+    public LocalTime editAttendance(String name, LocalDate date, LocalTime editTime) {
+        LocalTime oldTime = attendances.findLocalTimeByNameAndDate(name, date);
+        this.attendances = attendances.editAttendance(name, date, editTime);
+        return oldTime;
+    }
+
 
 }

@@ -72,7 +72,17 @@ public class AttendanceController {
     }
 
     private void optionTwo() {
+        String nickName = inputView.readEditNickName();
+        service.findName(nickName);
 
+        LocalDate date = inputView.readEditDate();
+        LocalTime editTime = inputView.readEditTime();
+
+        LocalTime oldTime = service.editAttendance(nickName, date, editTime);
+
+        String oldStatus = service.getAttendanceStatus(date, oldTime);
+        String attendanceStatus = service.getAttendanceStatus(date, editTime);
+        outputView.editResult(new AttendanceInfoDto(date, oldTime, oldStatus), editTime, attendanceStatus);
     }
 
     private void optionThree() {

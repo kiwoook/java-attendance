@@ -36,6 +36,25 @@ public class InputView {
         return parseLocalTime(scanner.nextLine());
     }
 
+    public String readEditNickName() {
+        System.out.println();
+        System.out.println("출석을 수정하려는 크루의 닉네임을 입력해 주세요.");
+
+        return scanner.nextLine();
+    }
+
+    public LocalDate readEditDate() {
+        System.out.println("수정하려는 날짜(일)를 입력해 주세요");
+        String input = scanner.nextLine();
+        return parseLocalDate(input);
+    }
+
+    public LocalTime readEditTime() {
+        System.out.println("언제로 변경하겠습니까?");
+
+        return parseLocalTime(scanner.nextLine());
+    }
+
     private LocalTime parseLocalTime(String input) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -45,4 +64,12 @@ public class InputView {
         }
     }
 
+    private LocalDate parseLocalDate(String input) {
+        try {
+            int date = Integer.parseInt(input);
+            return LocalDate.of(2024, 12, date);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT.getMessage());
+        }
+    }
 }
