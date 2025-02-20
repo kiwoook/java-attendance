@@ -1,14 +1,18 @@
 package attendance.service;
 
+import attendance.common.Constants;
 import attendance.domain.Attendance;
 import attendance.domain.AttendancePenalty;
 import attendance.domain.AttendanceStatus;
 import attendance.domain.Attendances;
+import attendance.domain.PenaltyCrew;
 import attendance.dto.AttendanceInfoDto;
 import attendance.dto.FileRequestDto;
+import attendance.dto.PenaltyCrewDto;
 import attendance.utils.FileParser;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,4 +77,21 @@ public class AttendanceService {
     }
 
 
+    public List<PenaltyCrewDto> getCrewsName(LocalDate today) {
+        List<String> crewNames = attendances.getCrewNames();
+        List<PenaltyCrew> penaltyCrews = new ArrayList<>();
+        for (String crewName : crewNames) {
+            List<Integer> counts = attendances.calculateByNameAndDate(crewName, today);
+            if (AttendancePenalty.find(counts) == AttendancePenalty.NONE) {
+                continue;
+            }
+            penaltyCrews.add(
+                new PenaltyCrew(crewName, counts.get(Constants.ABSENCE_INDEX), counts.get(Constants.LATE_INDEX))
+            );
+        }
+        return penaltyCrews.stream()
+            .sorted()
+            .map(PenaltyCrewDto::toDto)
+            .toList();
+    }
 }

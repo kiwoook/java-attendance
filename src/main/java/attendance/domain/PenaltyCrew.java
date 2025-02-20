@@ -1,5 +1,6 @@
 package attendance.domain;
 
+import java.util.List;
 import java.util.Objects;
 
 public class PenaltyCrew implements Comparable<PenaltyCrew> {
@@ -17,6 +18,7 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
         this.point = absenceCount * 3 + lateCount ;
         this.attendanceStatus = AttendancePenalty.find(absenceCount, lateCount);
     }
+
 
     @Override
     public int compareTo(PenaltyCrew o) {
