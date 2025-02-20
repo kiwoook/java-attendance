@@ -4,7 +4,9 @@ import attendance.dto.FileRequestDto;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,24 +19,27 @@ public class FileParser {
         this.path = path;
     }
 
-    public List<String> read() {
+    public List<FileRequestDto> read() {
         try (BufferedReader br = new BufferedReader(new FileReader(path))){
-            List<String> fileRequestDtos = new ArrayList<>();
+            List<FileRequestDto> fileRequestDtos = new ArrayList<>();
             br.readLine();
-            String line;
-            while ((line = br.readLine()) != null) {
-                fileRequestDtos.add(line);
-            }
+            generateFileRequestDto(br, fileRequestDtos);
             return fileRequestDtos;
         } catch (IOException e) {
             throw new IllegalArgumentException();
         }
     }
 
-    private void parsing(List<FileRequestDto> requestDtos, String line ){
-//        String[] split = line.split(",");
-//        String nickName = split[0];
-//        LocalDateTime dateTime = LocalDateTime.parse(split[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-//        fileRequestDtos.add(new FileRequestDto(nickName, dateTime));
+    private static void generateFileRequestDto(BufferedReader br, List<FileRequestDto> fileRequestDtos)
+        throws IOException {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] inputs = line.split(",");
+            String name = inputs[0];
+            LocalDate date = DateConverter.convertToDate(inputs[1]);
+            LocalTime time = DateConverter.convertToTime(inputs[1]);
+            fileRequestDtos.add(new FileRequestDto(name, date, time));
+        }
     }
+
 }

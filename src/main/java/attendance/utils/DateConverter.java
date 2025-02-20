@@ -9,6 +9,9 @@ import java.util.Locale;
 
 public class DateConverter {
 
+    public static final String LOCAL_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
+    public static final String LOCAL_TIME_FORMAT = "HH:mm";
+
     private DateConverter() {
     }
 
@@ -26,7 +29,17 @@ public class DateConverter {
     }
 
     public static String convertToString(LocalTime time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(LOCAL_TIME_FORMAT);
         return time.format(formatter);
+    }
+
+    public static LocalDate convertToDate(String input) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT);
+        return LocalDate.parse(input, formatter);
+    }
+
+    public static LocalTime convertToTime(String input) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT);
+        return LocalTime.parse(input, formatter);
     }
 }

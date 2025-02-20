@@ -25,8 +25,7 @@ public class AttendanceService {
         FileParser fileParser = new FileParser("src/main/java/resources/attendances.csv");
         List<FileRequestDto> dtos = fileParser.read();
         List<Attendance> convertedAttendances = dtos.stream()
-                .map(dto -> new Attendance(dto.name(), dto.localDateTime().toLocalDate(),
-                        dto.localDateTime().toLocalTime()))
+                .map(dto -> new Attendance(dto.name(), dto.date(), dto.time()))
                 .toList();
         attendances = new Attendances(convertedAttendances);
     }

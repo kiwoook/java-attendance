@@ -1,6 +1,7 @@
 package attendance.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-public record FileRequestDto(String name, LocalDateTime localDateTime) {
+public record FileRequestDto(String name, LocalDate date, LocalTime time) {
 }
