@@ -26,5 +26,4 @@ class PenaltyCrewTest {
 
         assertThat(result).containsExactlyElementsOf(expected);
     }
-
 }

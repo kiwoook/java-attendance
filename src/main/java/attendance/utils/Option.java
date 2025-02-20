@@ -4,6 +4,7 @@ import attendance.common.ErrorMessage;
 import java.util.Arrays;
 
 public enum Option {
+
     ONE("1"),
     TWO("2"),
     THREE("3"),

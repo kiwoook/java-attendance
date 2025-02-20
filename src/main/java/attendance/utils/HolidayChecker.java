@@ -8,8 +8,7 @@ public final class HolidayChecker {
 
     private static final int CHRISTMAS_DAY = 25;
 
-    private HolidayChecker() {
-    }
+    private HolidayChecker() {}
 
     public static boolean check(LocalDate localDate) {
         int dayOfMonth = localDate.getDayOfMonth();
