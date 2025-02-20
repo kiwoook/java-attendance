@@ -1,17 +1,23 @@
 package attendance.domain;
 
 import static attendance.common.Constants.ABSENCE_INDEX;
+import static attendance.common.Constants.COUNSELING_MINIMUM;
+import static attendance.common.Constants.EXPULSION_MINIMUM;
 import static attendance.common.Constants.LATE_INDEX;
+import static attendance.common.Constants.WARING_MAXIMUM;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
 public enum AttendancePenalty {
-    EXPULSION("제적", lateCont -> lateCont > 5),
-    COUNSELING("면담", lateCount -> lateCount >= 3 && lateCount <= 5),
-    WARNING("경고", lateCount -> lateCount == 2),
-    NONE("없음", lateCount -> lateCount < 2);
+
+
+    EXPULSION("제적", lateCont -> lateCont >= EXPULSION_MINIMUM),
+    COUNSELING("면담", lateCount -> lateCount >= COUNSELING_MINIMUM && lateCount < EXPULSION_MINIMUM),
+    WARNING("경고", lateCount -> lateCount == WARING_MAXIMUM),
+    NONE("없음", lateCount -> lateCount < WARING_MAXIMUM);
+
 
     private final String message;
     private final Predicate<Integer> rule;
@@ -25,7 +31,7 @@ public enum AttendancePenalty {
         return find(result.get(ABSENCE_INDEX), result.get(LATE_INDEX));
     }
 
-    public static AttendancePenalty find(int absenceCount, int lateCount){
+    public static AttendancePenalty find(int absenceCount, int lateCount) {
         int totalCount = absenceCount + lateCount / 3;
 
         return Arrays.stream(values())

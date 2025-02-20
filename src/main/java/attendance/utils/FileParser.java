@@ -17,22 +17,24 @@ public class FileParser {
         this.path = path;
     }
 
-    public List<FileRequestDto> read() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            List<FileRequestDto> fileRequestDtos = new ArrayList<>();
+    public List<String> read() {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))){
+            List<String> fileRequestDtos = new ArrayList<>();
             br.readLine();
             String line;
             while ((line = br.readLine()) != null) {
-                String[] split = line.split(",");
-                String nickName = split[0];
-                LocalDateTime dateTime = LocalDateTime.parse(split[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-                fileRequestDtos.add(new FileRequestDto(nickName, dateTime));
+                fileRequestDtos.add(line);
             }
             return fileRequestDtos;
         } catch (IOException e) {
-            System.out.println(e.getMessage());
             throw new IllegalArgumentException();
         }
+    }
+
+    private void parsing(List<FileRequestDto> requestDtos, String line ){
+//        String[] split = line.split(",");
+//        String nickName = split[0];
+//        LocalDateTime dateTime = LocalDateTime.parse(split[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+//        fileRequestDtos.add(new FileRequestDto(nickName, dateTime));
     }
 }
