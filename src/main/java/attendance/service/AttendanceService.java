@@ -78,7 +78,6 @@ public class AttendanceService {
                 .getMessage();
     }
 
-
     public List<PenaltyCrewDto> getCrewsName(LocalDate today) {
         List<String> crewNames = attendances.getCrewNames();
         List<PenaltyCrew> penaltyCrews = new ArrayList<>();

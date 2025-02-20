@@ -58,7 +58,6 @@ public class AttendanceController {
         }
     }
 
-
     private void optionOne(LocalDate today) {
         HolidayChecker.validWeekDay(today);
 

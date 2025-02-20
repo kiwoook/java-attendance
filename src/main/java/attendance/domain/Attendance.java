@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public class Attendance implements Comparable<Attendance> {
 
-
     private static final LocalTime OPEN_TIME = LocalTime.of(8, 0);
     private static final LocalTime CLOSED_TIME = LocalTime.of(23, 0);
 
