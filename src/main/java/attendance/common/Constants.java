@@ -13,6 +13,11 @@ public final class Constants {
 
     public static final String LINE_SEPARATOR = System.lineSeparator();
 
+    public static final int EXPULSION_MINIMUM = 6;
+    public static final int COUNSELING_MINIMUM = 3;
+    public static final int WARING_MAXIMUM = 2;
+
+
     private Constants() {
     }
 }

@@ -18,6 +18,9 @@ public enum AttendanceStatus {
 
     private static final LocalTime MONDAY_START_TIME = LocalTime.of(13, 0);
     private static final LocalTime NOT_MONDAY_START_TIME = LocalTime.of(10, 0);
+    private static final int ABSENCE_BOUNDARY = 30;
+    private static final int LATE_BOUNDARY = 5;
+
 
     private final String korean;
 
@@ -36,11 +39,11 @@ public enum AttendanceStatus {
     }
 
     private static AttendanceStatus getAttendanceStatus(LocalTime startTime, LocalTime attendanceTime) {
-        if (attendanceTime.isAfter(startTime.plusMinutes(30))) {
+        if (attendanceTime.isAfter(startTime.plusMinutes(ABSENCE_BOUNDARY))) {
             return ABSENCE;
         }
 
-        if (attendanceTime.isAfter(startTime.plusMinutes(5))) {
+        if (attendanceTime.isAfter(startTime.plusMinutes(LATE_BOUNDARY))) {
             return LATE;
         }
 
@@ -61,16 +64,20 @@ public enum AttendanceStatus {
         LocalDate currentDate = DECEMBER_START_DATE;
 
         while (currentDate.isBefore(today)) {
-            if (HolidayChecker.check(currentDate)) {
-                currentDate = currentDate.plusDays(1);
-                continue;
-            }
-
-            incrementAbsence(currentDate, attendances, map);
-            currentDate = currentDate.plusDays(1);
+            currentDate = processAbsenceCount(currentDate, attendances, map);
         }
 
         return map;
+    }
+
+    private static LocalDate processAbsenceCount(LocalDate currentDate, List<Attendance> attendances,
+                                                 Map<AttendanceStatus, Integer> map) {
+        if (HolidayChecker.check(currentDate)) {
+            return currentDate.plusDays(1);
+        }
+
+        incrementAbsence(currentDate, attendances, map);
+        return currentDate.plusDays(1);
     }
 
     private static void incrementAbsence(LocalDate date, List<Attendance> attendances,
@@ -78,7 +85,7 @@ public enum AttendanceStatus {
         boolean hasAttendance = attendances.stream()
                 .anyMatch(attendance -> attendance.hasAttendance(date));
 
-            if (!hasAttendance) {
+        if (!hasAttendance) {
             map.put(AttendanceStatus.ABSENCE, map.get(AttendanceStatus.ABSENCE) + 1);
         }
     }

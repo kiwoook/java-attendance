@@ -1,7 +1,6 @@
 package attendance.controller;
 
 import attendance.common.ErrorMessage;
-import attendance.domain.Attendances;
 import attendance.dto.AttendanceInfoDto;
 import attendance.dto.PenaltyCrewDto;
 import attendance.service.AttendanceService;
@@ -17,20 +16,22 @@ import java.util.Map;
 
 public class AttendanceController {
 
-    private InputView inputView;
-    private OutputView outputView;
-    private AttendanceService service;
+    private final InputView inputView;
+    private final OutputView outputView;
+    private final AttendanceService service;
+    private final DateGenerator dateGenerator;
 
-    public AttendanceController(InputView inputView, OutputView outputView, AttendanceService service) {
+    public AttendanceController(InputView inputView, OutputView outputView, AttendanceService service,
+                                DateGenerator dateGenerator) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.service = service;
+        this.dateGenerator = dateGenerator;
     }
 
     public void run() {
         service.init();
-        DateGenerator generator = () -> LocalDate.of(2024, 12, 13);
-        LocalDate now = generator.generate();
+        LocalDate now = dateGenerator.generate();
         Option option = null;
 
         while (option != Option.QUIT) {
@@ -60,8 +61,7 @@ public class AttendanceController {
 
     private void optionOne(LocalDate today) {
         if (HolidayChecker.check(today)) {
-//            outputView.printError(today);
-            throw new IllegalStateException(ErrorMessage.getFormattedMessage(today));
+            throw new IllegalArgumentException(ErrorMessage.getFormattedMessage(today));
         }
         String nickname = inputView.readNickname();
         service.findName(nickname);
