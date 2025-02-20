@@ -1,5 +1,7 @@
 package attendance.service;
 
+import static attendance.common.Constants.FILE_PATH;
+
 import attendance.common.Constants;
 import attendance.domain.Attendance;
 import attendance.domain.AttendancePenalty;
@@ -23,7 +25,7 @@ public class AttendanceService {
     private Attendances attendances;
 
     public void init() {
-        FileParser fileParser = new FileParser("src/main/java/resources/attendances.csv");
+        FileParser fileParser = new FileParser(FILE_PATH);
         List<FileRequestDto> dtos = fileParser.read();
         List<Attendance> convertedAttendances = dtos.stream()
                 .map(dto -> new Attendance(dto.name(), dto.date(), dto.time()))
@@ -50,7 +52,8 @@ public class AttendanceService {
     }
 
     public EditResponseDto edit(String name, LocalDate date, LocalTime editTime) {
-        LocalTime oldTime = editAttendance(name, date, editTime);
+        LocalTime oldTime = findAttendanceTime(name, date);
+        updateAttendance(name, date, editTime);
         String oldStatus = getAttendanceStatus(date, oldTime);
         String editStatus = getAttendanceStatus(date, editTime);
 
@@ -92,10 +95,12 @@ public class AttendanceService {
                 .toList();
     }
 
-    private LocalTime editAttendance(String name, LocalDate date, LocalTime editTime) {
-        LocalTime oldTime = attendances.findLocalTimeByNameAndDate(name, date);
+    private LocalTime findAttendanceTime(String name, LocalDate date) {
+        return attendances.findLocalTimeByNameAndDate(name, date);
+    }
+
+    private void updateAttendance(String name, LocalDate date, LocalTime editTime) {
         this.attendances = attendances.editAttendance(name, date, editTime);
-        return oldTime;
     }
 
     private void addPenaltyCrew(String crewName, LocalDate today, List<PenaltyCrew> penaltyCrews) {
