@@ -10,6 +10,7 @@ public final class Constants {
     public static final int LATE_INDEX = 1;
     public static final int ABSENCE_INDEX = 2;
     public static final String LINE_SEPARATOR = System.lineSeparator();
+    public static final String FILE_PATH = "src/main/java/resources/attendances.csv";
     public static final int EXPULSION_MINIMUM = 6;
     public static final int COUNSELING_MINIMUM = 3;
     public static final int WARING_MAXIMUM = 2;
