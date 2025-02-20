@@ -59,8 +59,20 @@ public class Attendance implements Comparable<Attendance> {
         return Optional.empty();
     }
 
-    public AttendanceStatus getStatus(){
+    public AttendanceStatus getStatus() {
         return AttendanceStatus.of(attendanceDate, attendanceTime);
+    }
+
+    public String getStatusMessage() {
+        return AttendanceStatus.of(attendanceDate, attendanceTime).getKorean();
+    }
+
+    public LocalDate getAttendanceDate() {
+        return attendanceDate;
+    }
+
+    public LocalTime getAttendanceTime() {
+        return attendanceTime;
     }
 
     public String getNickName() {

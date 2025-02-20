@@ -14,8 +14,8 @@ class AttendancePenaltyTest {
         List<Integer> result1 = List.of(3, 5, 2);
         List<Integer> result2 = List.of(0, 7, 1);
 
-        assertThat(AttendancePenalty.findPenalty(result1).getMessage()).isEqualTo("면담");
-        assertThat(AttendancePenalty.findPenalty(result2).getMessage()).isEqualTo("면담");
+        assertThat(AttendancePenalty.find(result1).getMessage()).isEqualTo("면담");
+        assertThat(AttendancePenalty.find(result2).getMessage()).isEqualTo("면담");
     }
 
     @Test
@@ -23,8 +23,8 @@ class AttendancePenaltyTest {
         List<Integer> result1 = List.of(3, 15, 1);
         List<Integer> result2 = List.of(0, 2, 6);
 
-        assertThat(AttendancePenalty.findPenalty(result1).getMessage()).isEqualTo("제적");
-        assertThat(AttendancePenalty.findPenalty(result2).getMessage()).isEqualTo("제적");
+        assertThat(AttendancePenalty.find(result1).getMessage()).isEqualTo("제적");
+        assertThat(AttendancePenalty.find(result2).getMessage()).isEqualTo("제적");
     }
 
     @Test
@@ -32,7 +32,7 @@ class AttendancePenaltyTest {
         List<Integer> result1 = List.of(3, 6, 0);
         List<Integer> result2 = List.of(0, 2, 2);
 
-        assertThat(AttendancePenalty.findPenalty(result1).getMessage()).isEqualTo("경고");
-        assertThat(AttendancePenalty.findPenalty(result2).getMessage()).isEqualTo("경고");
+        assertThat(AttendancePenalty.find(result1).getMessage()).isEqualTo("경고");
+        assertThat(AttendancePenalty.find(result2).getMessage()).isEqualTo("경고");
     }
 }

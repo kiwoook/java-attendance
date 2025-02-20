@@ -15,7 +15,7 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
         this.absenceCount = absenceCount;
         this.name = name;
         this.point = absenceCount * 3 + lateCount ;
-        this.attendanceStatus = AttendancePenalty.findPenalty(absenceCount, lateCount);
+        this.attendanceStatus = AttendancePenalty.find(absenceCount, lateCount);
     }
 
     @Override

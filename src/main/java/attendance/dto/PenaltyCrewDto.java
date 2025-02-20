@@ -10,6 +10,6 @@ public record PenaltyCrewDto(String name, int absenceCount, int lateCount, Strin
         int crewLateCount = penaltyCrew.getLateCount();
 
         return new PenaltyCrewDto(penaltyCrew.getName(), crewAbsenceCount, crewLateCount,
-                AttendancePenalty.findPenalty(crewAbsenceCount, crewLateCount).getMessage());
+                AttendancePenalty.find(crewAbsenceCount, crewLateCount).getMessage());
     }
 }
