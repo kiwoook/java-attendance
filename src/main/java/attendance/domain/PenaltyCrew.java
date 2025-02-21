@@ -11,13 +11,13 @@ import java.util.Optional;
 public class PenaltyCrew implements Comparable<PenaltyCrew> {
 
     private final String name;
-    private final Integer point;
-    private final AttendancePenalty attendancePenalty;
+    private final int absenceCount;
+    private final int lateCount;
 
     public PenaltyCrew(String name, int absenceCount, int lateCount) {
         this.name = name;
-        this.point = absenceCount * 3 + lateCount;
-        this.attendancePenalty = AttendancePenalty.find(absenceCount, lateCount);
+        this.absenceCount = absenceCount;
+        this.lateCount = lateCount;
     }
 
     public static Optional<PenaltyCrew> createIfPenalized(String name, LocalDate date, Attendances attendances) {
@@ -38,11 +38,22 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
         return name;
     }
 
+    private AttendancePenalty attendancePenalty() {
+        return AttendancePenalty.find(absenceCount, lateCount);
+    }
+
+    private Integer priority() {
+        return absenceCount * 3 + lateCount;
+    }
+
     @Override
     public int compareTo(PenaltyCrew o) {
-        this.attendancePenalty.compareTo(o.attendancePenalty);
-        int pointComparison = this.point.compareTo(o.point);
+        int penaltyComparison = this.attendancePenalty().compareTo(o.attendancePenalty());
+        if (penaltyComparison != 0) {
+            return penaltyComparison;
+        }
 
+        int pointComparison = this.priority().compareTo(o.priority());
         if (pointComparison != 0) {
             return -pointComparison;
         }
@@ -56,12 +67,12 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
             return false;
         }
         PenaltyCrew that = (PenaltyCrew) o;
-        return Objects.equals(name, that.name) && Objects.equals(point, that.point)
-                && attendancePenalty == that.attendancePenalty;
+        return absenceCount == that.absenceCount && lateCount == that.lateCount && Objects.equals(name,
+                that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, point, attendancePenalty);
+        return Objects.hash(name, absenceCount, lateCount);
     }
 }
