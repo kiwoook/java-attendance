@@ -24,7 +24,7 @@ public class AttendanceService {
 
     private Attendances attendances;
 
-    public void init() {
+    public void readFile() {
         FileParser fileParser = new FileParser(FILE_PATH);
         List<FileRequestDto> dtos = fileParser.read();
         List<Attendance> convertedAttendances = dtos.stream()

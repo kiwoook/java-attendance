@@ -18,25 +18,25 @@ public class AttendanceController {
 
     private final InputView inputView;
     private final OutputView outputView;
-    private final AttendanceService service;
+    private final AttendanceService attendanceService;
     private final DateGenerator dateGenerator;
 
-    public AttendanceController(InputView inputView, OutputView outputView, AttendanceService service,
+    public AttendanceController(InputView inputView, OutputView outputView, AttendanceService attendanceService,
                                 DateGenerator dateGenerator) {
         this.inputView = inputView;
         this.outputView = outputView;
-        this.service = service;
+        this.attendanceService = attendanceService;
         this.dateGenerator = dateGenerator;
     }
 
     public void run() {
-        service.init();
-        LocalDate now = dateGenerator.generate();
+        attendanceService.readFile();
+        LocalDate today = dateGenerator.generate();
         Option option = null;
 
         while (option != Option.QUIT) {
-            option = inputView.readOption(now);
-            chooseOption(option, now);
+            option = inputView.readOption(today);
+            chooseOption(option, today);
         }
     }
 
@@ -62,39 +62,39 @@ public class AttendanceController {
         HolidayChecker.validWeekDay(today);
 
         String nickname = inputView.readNickname();
-        service.findName(nickname);
+        attendanceService.findName(nickname);
 
         LocalTime localTime = inputView.readTime();
-        service.insertAttendance(nickname, today, localTime);
+        attendanceService.insertAttendance(nickname, today, localTime);
 
-        String attendanceStatus = service.getAttendanceStatus(today, localTime);
+        String attendanceStatus = attendanceService.getAttendanceStatus(today, localTime);
         outputView.addResult(new AttendanceInfoDto(today, localTime, attendanceStatus));
     }
 
     private void optionTwo() {
         String nickName = inputView.readEditNickName();
-        service.findName(nickName);
+        attendanceService.findName(nickName);
         LocalDate date = inputView.readEditDate();
         LocalTime editTime = inputView.readEditTime();
 
-        EditResponseDto responseDto = service.edit(nickName, date, editTime);
+        EditResponseDto responseDto = attendanceService.edit(nickName, date, editTime);
 
         outputView.editResult(responseDto);
     }
 
     private void optionThree(LocalDate today) {
         String nickname = inputView.readNickname();
-        service.findName(nickname);
+        attendanceService.findName(nickname);
 
-        Map<LocalDate, AttendanceInfoDto> dtoMap = service.getAttendanceInfos(nickname, today);
-        List<Integer> counts = service.getAttendanceCounts(nickname, today);
-        String penalty = service.getAttendancePenalty(counts);
+        Map<LocalDate, AttendanceInfoDto> dtoMap = attendanceService.getAttendanceInfos(nickname, today);
+        List<Integer> counts = attendanceService.getAttendanceCounts(nickname, today);
+        String penalty = attendanceService.getAttendancePenalty(counts);
 
         outputView.attendanceResult(nickname, dtoMap, counts, penalty, today);
     }
 
     private void optionFour(LocalDate today) {
-        List<PenaltyCrewDto> crewsInfos = service.getCrewsName(today);
+        List<PenaltyCrewDto> crewsInfos = attendanceService.getCrewsName(today);
         outputView.penaltyCrews(crewsInfos);
     }
 }
