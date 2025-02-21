@@ -1,6 +1,8 @@
 package attendance.service;
 
+import static attendance.common.Constants.ABSENCE_INDEX;
 import static attendance.common.Constants.FILE_PATH;
+import static attendance.common.Constants.LATE_INDEX;
 
 import attendance.common.Constants;
 import attendance.domain.Attendance;
@@ -11,7 +13,7 @@ import attendance.domain.PenaltyCrew;
 import attendance.dto.AttendanceInfoDto;
 import attendance.dto.EditResponseDto;
 import attendance.dto.FileRequestDto;
-import attendance.dto.PenaltyCrewDto;
+import attendance.dto.PenaltyCrewInfoDto;
 import attendance.utils.FileParser;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,6 +32,7 @@ public class AttendanceService {
         List<Attendance> convertedAttendances = dtos.stream()
                 .map(dto -> new Attendance(dto.name(), dto.date(), dto.time()))
                 .toList();
+
         attendances = new Attendances(convertedAttendances);
     }
 
@@ -37,27 +40,27 @@ public class AttendanceService {
         attendances.checkName(name);
     }
 
-    public void checkByNameAndDate(String name, LocalDate today) {
-        attendances.findLocalTimeByNameAndDate(name, today);
+    public void checkInsertByNameAndDate(String name, LocalDate today) {
+        attendances.validateDuplicateByNameAndDate(name, today);
     }
 
     public void insertAttendance(String name, LocalDate today, LocalTime time) {
-        checkByNameAndDate(name, today);
+        checkInsertByNameAndDate(name, today);
         Attendance attendance = new Attendance(name, today, time);
         this.attendances = attendances.add(attendance);
     }
 
-    public String getAttendanceStatus(LocalDate date, LocalTime time) {
-        return AttendanceStatus.of(date, time).getKorean();
-    }
-
     public EditResponseDto edit(String name, LocalDate date, LocalTime editTime) {
-        LocalTime oldTime = findAttendanceTime(name, date);
+        LocalTime oldTime = attendances.findLocalTimeByNameAndDate(name, date);
         updateAttendance(name, date, editTime);
         String oldStatus = getAttendanceStatus(date, oldTime);
         String editStatus = getAttendanceStatus(date, editTime);
 
         return new EditResponseDto(date, oldTime, editTime, oldStatus, editStatus);
+    }
+
+    public String getAttendanceStatus(LocalDate date, LocalTime time) {
+        return AttendanceStatus.of(date, time).getKorean();
     }
 
     public Map<LocalDate, AttendanceInfoDto> getAttendanceInfos(String name, LocalDate today) {
@@ -81,7 +84,7 @@ public class AttendanceService {
                 .getMessage();
     }
 
-    public List<PenaltyCrewDto> getCrewsName(LocalDate today) {
+    public List<PenaltyCrewInfoDto> getCrewsName(LocalDate today) {
         List<String> crewNames = attendances.getCrewNames();
         List<PenaltyCrew> penaltyCrews = new ArrayList<>();
 
@@ -91,12 +94,14 @@ public class AttendanceService {
 
         return penaltyCrews.stream()
                 .sorted()
-                .map(PenaltyCrewDto::toDto)
+                .map(penaltyCrew -> convertToPenaltyCrewInfoDto(penaltyCrew, today))
                 .toList();
     }
 
-    private LocalTime findAttendanceTime(String name, LocalDate date) {
-        return attendances.findLocalTimeByNameAndDate(name, date);
+    private PenaltyCrewInfoDto convertToPenaltyCrewInfoDto(PenaltyCrew penaltyCrew, LocalDate today) {
+        List<Integer> counts = penaltyCrew.getCounts(attendances, today);
+
+        return PenaltyCrewInfoDto.toDto(penaltyCrew, counts.get(ABSENCE_INDEX), counts.get(LATE_INDEX));
     }
 
     private void updateAttendance(String name, LocalDate date, LocalTime editTime) {
@@ -108,8 +113,9 @@ public class AttendanceService {
         if (AttendancePenalty.find(counts) == AttendancePenalty.NONE) {
             return;
         }
+
         penaltyCrews.add(
-                new PenaltyCrew(crewName, counts.get(Constants.ABSENCE_INDEX), counts.get(Constants.LATE_INDEX))
+                new PenaltyCrew(crewName, counts.get(ABSENCE_INDEX), counts.get(Constants.LATE_INDEX))
         );
     }
 }

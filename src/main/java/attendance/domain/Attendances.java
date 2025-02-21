@@ -19,7 +19,7 @@ public class Attendances {
 
     public boolean checkAttendance(String name, LocalDate now) {
         return attendances.stream()
-                .anyMatch(attendance -> attendance.check(name, now));
+                .anyMatch(attendance -> attendance.checkNameAndNow(name, now));
     }
 
     public void checkName(String name) {
@@ -46,9 +46,19 @@ public class Attendances {
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_ATTENDANCE_RECORD.getMessage()));
     }
 
+    public void validateDuplicateByNameAndDate(String name, LocalDate attendanceDate) {
+        attendances.stream()
+                .map(attendance -> attendance.findTimeIfMatch(name, attendanceDate))
+                .flatMap(Optional::stream)
+                .findAny()
+                .ifPresent(time -> {
+                    throw new IllegalArgumentException(ErrorMessage.ALREADY_ATTENDED.getMessage());
+                });
+    }
+
     public Attendances editAttendance(String name, LocalDate attendanceDate, LocalTime attendanceTime) {
         Attendance findAttendance = attendances.stream()
-                .filter(attendance -> attendance.check(name, attendanceDate))
+                .filter(attendance -> attendance.checkNameAndNow(name, attendanceDate))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_ATTENDANCE_RECORD.getMessage()));
 
@@ -60,8 +70,7 @@ public class Attendances {
 
     public List<Attendance> findByNameAndDateWithAscend(String name, LocalDate today) {
         return attendances.stream()
-                .filter(attendance -> attendance.hasName(name))
-                .filter(attendance -> attendance.isBefore(today))
+                .filter(attendance -> attendance.hasName(name) && attendance.isBefore(today))
                 .sorted()
                 .toList();
     }
@@ -80,9 +89,9 @@ public class Attendances {
 
     public List<String> getCrewNames() {
         return attendances.stream()
-            .map(Attendance::getNickName)
-            .distinct()
-            .toList();
+                .map(Attendance::getNickName)
+                .distinct()
+                .toList();
     }
 
     @Override

@@ -2,7 +2,7 @@ package attendance.controller;
 
 import attendance.dto.AttendanceInfoDto;
 import attendance.dto.EditResponseDto;
-import attendance.dto.PenaltyCrewDto;
+import attendance.dto.PenaltyCrewInfoDto;
 import attendance.service.AttendanceService;
 import attendance.service.DateGenerator;
 import attendance.utils.HolidayChecker;
@@ -94,7 +94,7 @@ public class AttendanceController {
     }
 
     private void optionFour(LocalDate today) {
-        List<PenaltyCrewDto> crewsInfos = attendanceService.getCrewsName(today);
+        List<PenaltyCrewInfoDto> crewsInfos = attendanceService.getCrewsName(today);
         outputView.penaltyCrews(crewsInfos);
     }
 }

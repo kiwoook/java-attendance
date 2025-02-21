@@ -1,21 +1,23 @@
 package attendance.domain;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public class PenaltyCrew implements Comparable<PenaltyCrew> {
 
     private final String name;
-    private final int absenceCount;
-    private final int lateCount;
     private final Integer point;
     private final AttendancePenalty attendancePenalty;
 
     public PenaltyCrew(String name, int absenceCount, int lateCount) {
-        this.lateCount = lateCount;
-        this.absenceCount = absenceCount;
         this.name = name;
         this.point = absenceCount * 3 + lateCount;
         this.attendancePenalty = AttendancePenalty.find(absenceCount, lateCount);
+    }
+
+    public List<Integer> getCounts(Attendances attendances, LocalDate today) {
+        return attendances.calculateByNameAndDate(name, today);
     }
 
     @Override
@@ -34,26 +36,18 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
         return name;
     }
 
-    public int getAbsenceCount() {
-        return absenceCount;
-    }
-
-    public int getLateCount() {
-        return lateCount;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
         PenaltyCrew that = (PenaltyCrew) o;
-        return absenceCount == that.absenceCount && lateCount == that.lateCount && Objects.equals(name, that.name)
-                && Objects.equals(point, that.point) && attendancePenalty == that.attendancePenalty;
+        return Objects.equals(name, that.name) && Objects.equals(point, that.point)
+                && attendancePenalty == that.attendancePenalty;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, absenceCount, lateCount, point, attendancePenalty);
+        return Objects.hash(name, point, attendancePenalty);
     }
 }
