@@ -32,14 +32,13 @@ public class OutputView {
 
     public void editResult(EditResponseDto responseDto) {
         String oldTime = DateConverter.convertToString(responseDto.attendanceDate(), responseDto.oldTime());
-        StringBuilder sb = new StringBuilder();
-        sb.append(oldTime)
-                .append(" ")
-                .append(wrapping(responseDto.oldStatus()))
-                .append(" -> ")
-                .append(DateConverter.convertToString(responseDto.editTime()))
-                .append(wrapping(responseDto.editStatus()))
-                .append(" 수정완료!");
+        String sb = oldTime
+                + " "
+                + wrapping(responseDto.oldStatus())
+                + " -> "
+                + DateConverter.convertToString(responseDto.editTime())
+                + wrapping(responseDto.editStatus())
+                + " 수정완료!";
         System.out.println(sb);
     }
 
