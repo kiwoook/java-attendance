@@ -9,6 +9,7 @@ public enum ErrorMessage {
     NOT_OPEN_TIME("운영시간은 08 ~ 23시 까지 입니다."),
     NO_NAME("등록되지 않은 닉네임입니다."),
     NO_ATTENDANCE_RECORD("출석 기록을 찾을 수 없습니다."),
+    ALREADY_ATTENDED("이미 출석을 하였습니다. 수정 기능을 이용해주세요."),
     INVALID_DATE("출석기록하는 달이 아닙니다."),
     NOT_OPEN_DAY("%s은 등교일이 아닙니다."),
     INVALID_TIME_FORMAT_INPUT("HH:mm 형식을 지켜 작성해주세요."),

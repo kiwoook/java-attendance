@@ -8,7 +8,7 @@ import static attendance.common.Constants.PRESENCE_INDEX;
 
 import attendance.dto.AttendanceInfoDto;
 import attendance.dto.EditResponseDto;
-import attendance.dto.PenaltyCrewDto;
+import attendance.dto.PenaltyCrewInfoDto;
 import attendance.utils.DateConverter;
 import attendance.utils.HolidayChecker;
 import java.time.LocalDate;
@@ -59,8 +59,8 @@ public class OutputView {
         }
     }
 
-    public void penaltyCrews(List<PenaltyCrewDto> crewsInfos) {
-        for (PenaltyCrewDto crewsInfo : crewsInfos) {
+    public void penaltyCrews(List<PenaltyCrewInfoDto> crewsInfos) {
+        for (PenaltyCrewInfoDto crewsInfo : crewsInfos) {
             System.out.printf("- %s: 결석 %d회, 지각 %d회 %s%n",
                 crewsInfo.name(), crewsInfo.absenceCount(), crewsInfo.lateCount(), wrapping(crewsInfo.penaltyMessage()));
         }

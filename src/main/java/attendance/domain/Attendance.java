@@ -26,23 +26,7 @@ public class Attendance implements Comparable<Attendance> {
         this.attendanceTime = attendanceTime;
     }
 
-    private void validateDate(LocalDate attendanceDate) {
-        if (attendanceDate.isBefore(DECEMBER_START_DATE) || attendanceDate.isAfter(DECEMBER_END_DATE)) {
-            throw new IllegalArgumentException(ErrorMessage.INVALID_DATE.getMessage());
-        }
-    }
-
-    private void validateTime(LocalTime attendanceTime) {
-        if (validateOpenTime(attendanceTime)) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_OPEN_TIME.getMessage());
-        }
-    }
-
-    private boolean validateOpenTime(LocalTime attendanceTime) {
-        return attendanceTime.isBefore(OPEN_TIME) || attendanceTime.isAfter(CLOSED_TIME);
-    }
-
-    public boolean check(String name, LocalDate now) {
+    public boolean checkNameAndNow(String name, LocalDate now) {
         return nickName.equals(name) && attendanceDate.equals(now);
     }
 
@@ -51,7 +35,7 @@ public class Attendance implements Comparable<Attendance> {
     }
 
     public Optional<LocalTime> findTimeIfMatch(String name, LocalDate attendanceDate) {
-        if (check(name, attendanceDate)) {
+        if (checkNameAndNow(name, attendanceDate)) {
             return Optional.of(attendanceTime);
         }
 
@@ -78,11 +62,6 @@ public class Attendance implements Comparable<Attendance> {
         return nickName;
     }
 
-    @Override
-    public int compareTo(Attendance o) {
-        return this.attendanceDate.compareTo(o.attendanceDate);
-    }
-
     public boolean isBefore(LocalDate today) {
         return this.attendanceDate.isBefore(today);
     }
@@ -90,6 +69,28 @@ public class Attendance implements Comparable<Attendance> {
     public boolean hasAttendance(LocalDate date) {
         return this.attendanceDate.isEqual(date);
     }
+
+    private void validateDate(LocalDate attendanceDate) {
+        if (attendanceDate.isBefore(DECEMBER_START_DATE) || attendanceDate.isAfter(DECEMBER_END_DATE)) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_DATE.getMessage());
+        }
+    }
+
+    private void validateTime(LocalTime attendanceTime) {
+        if (validateOpenTime(attendanceTime)) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_OPEN_TIME.getMessage());
+        }
+    }
+
+    private boolean validateOpenTime(LocalTime attendanceTime) {
+        return attendanceTime.isBefore(OPEN_TIME) || attendanceTime.isAfter(CLOSED_TIME);
+    }
+
+    @Override
+    public int compareTo(Attendance o) {
+        return this.attendanceDate.compareTo(o.attendanceDate);
+    }
+
 
     @Override
     public boolean equals(Object o) {
