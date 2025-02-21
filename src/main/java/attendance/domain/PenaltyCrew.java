@@ -1,8 +1,12 @@
 package attendance.domain;
 
+import static attendance.common.Constants.ABSENCE_INDEX;
+import static attendance.common.Constants.LATE_INDEX;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class PenaltyCrew implements Comparable<PenaltyCrew> {
 
@@ -16,8 +20,22 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
         this.attendancePenalty = AttendancePenalty.find(absenceCount, lateCount);
     }
 
+    public static Optional<PenaltyCrew> createIfPenalized(String name, LocalDate date, Attendances attendances) {
+        List<Integer> counts = attendances.calculateByNameAndDate(name, date);
+
+        if (AttendancePenalty.find(counts) == AttendancePenalty.NONE) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new PenaltyCrew(name, counts.get(ABSENCE_INDEX), counts.get(LATE_INDEX)));
+    }
+
     public List<Integer> getCounts(Attendances attendances, LocalDate today) {
         return attendances.calculateByNameAndDate(name, today);
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -30,10 +48,6 @@ public class PenaltyCrew implements Comparable<PenaltyCrew> {
         }
 
         return name.compareTo(o.name);
-    }
-
-    public String getName() {
-        return name;
     }
 
     @Override
