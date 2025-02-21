@@ -4,7 +4,6 @@ import static attendance.common.Constants.ABSENCE_INDEX;
 import static attendance.common.Constants.FILE_PATH;
 import static attendance.common.Constants.LATE_INDEX;
 
-import attendance.common.Constants;
 import attendance.domain.Attendance;
 import attendance.domain.AttendancePenalty;
 import attendance.domain.AttendanceStatus;
@@ -17,10 +16,10 @@ import attendance.dto.PenaltyCrewInfoDto;
 import attendance.utils.FileParser;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AttendanceService {
 
@@ -64,15 +63,9 @@ public class AttendanceService {
     }
 
     public Map<LocalDate, AttendanceInfoDto> getAttendanceInfos(String name, LocalDate today) {
-        Map<LocalDate, AttendanceInfoDto> map = new HashMap<>();
-        List<Attendance> attendanceList = attendances.findByNameAndDateWithAscend(name, today);
-
-        for (Attendance attendance : attendanceList) {
-            AttendanceInfoDto dto = AttendanceInfoDto.toDto(attendance);
-            map.put(dto.attendanceDate(), dto);
-        }
-
-        return map;
+        return attendances.findByNameAndDateWithAscend(name, today).stream()
+                .map(AttendanceInfoDto::toDto)
+                .collect(Collectors.toMap(AttendanceInfoDto::attendanceDate, dto -> dto));
     }
 
     public List<Integer> getAttendanceCounts(String name, LocalDate today) {
@@ -86,11 +79,11 @@ public class AttendanceService {
 
     public List<PenaltyCrewInfoDto> getCrewsName(LocalDate today) {
         List<String> crewNames = attendances.getCrewNames();
-        List<PenaltyCrew> penaltyCrews = new ArrayList<>();
 
-        for (String crewName : crewNames) {
-            addPenaltyCrew(crewName, today, penaltyCrews);
-        }
+        List<PenaltyCrew> penaltyCrews = crewNames.stream()
+                .map(crewName -> PenaltyCrew.createIfPenalized(crewName, today, attendances))
+                .flatMap(Optional::stream)
+                .toList();
 
         return penaltyCrews.stream()
                 .sorted()
@@ -106,16 +99,5 @@ public class AttendanceService {
 
     private void updateAttendance(String name, LocalDate date, LocalTime editTime) {
         this.attendances = attendances.editAttendance(name, date, editTime);
-    }
-
-    private void addPenaltyCrew(String crewName, LocalDate today, List<PenaltyCrew> penaltyCrews) {
-        List<Integer> counts = attendances.calculateByNameAndDate(crewName, today);
-        if (AttendancePenalty.find(counts) == AttendancePenalty.NONE) {
-            return;
-        }
-
-        penaltyCrews.add(
-                new PenaltyCrew(crewName, counts.get(ABSENCE_INDEX), counts.get(Constants.LATE_INDEX))
-        );
     }
 }
