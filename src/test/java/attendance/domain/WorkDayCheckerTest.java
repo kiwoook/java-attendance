@@ -17,9 +17,9 @@ class WorkDayCheckerTest {
     @ParameterizedTest
     @ValueSource(ints = {2, 3, 4, 5, 6})
     void test1(int workDay) {
-        LocalDate workdate = LocalDate.of(2024, 12, workDay);
+        LocalDate workDate = LocalDate.of(2024, 12, workDay);
 
-        assertThat(WorkDayChecker.isWorkDate(workdate)).isTrue();
+        assertThat(WorkDayChecker.isWorkDate(workDate)).isTrue();
     }
 
     @DisplayName("주말이면 False를 반환한다.")

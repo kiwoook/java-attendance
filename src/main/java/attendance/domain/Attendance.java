@@ -11,13 +11,17 @@ import java.util.Objects;
 public class Attendance {
 
     private final LocalDate attendanceDate;
-    private LocalTime attendanceTime;
+    private final LocalTime attendanceTime;
 
     public Attendance(LocalDate attendanceDate, LocalTime attendanceTime) {
         validateOpenDay(attendanceDate);
         validateOpenTime(attendanceTime);
         this.attendanceDate = attendanceDate;
         this.attendanceTime = attendanceTime;
+    }
+
+    public static Attendance of(LocalDate attendanceDate, LocalTime attendanceTime) {
+        return new Attendance(attendanceDate, attendanceTime);
     }
 
     private static void validateOpenDay(LocalDate attendanceDate) {
@@ -30,14 +34,9 @@ public class Attendance {
         }
     }
 
-    public boolean isLocalDate(LocalDate localDate) {
-        return attendanceDate.equals(localDate);
+    public Attendance editTime(LocalTime editTime) {
+        return new Attendance(attendanceDate, editTime);
     }
-
-    public void editTime(LocalTime editTime) {
-        this.attendanceTime = editTime;
-    }
-
 
     public LocalTime getAttendanceTime() {
         return attendanceTime;
@@ -56,6 +55,14 @@ public class Attendance {
     @Override
     public int hashCode() {
         return Objects.hash(attendanceDate, attendanceTime);
+    }
+
+    @Override
+    public String toString() {
+        return "Attendance{" +
+                "attendanceDate=" + attendanceDate +
+                ", attendanceTime=" + attendanceTime +
+                '}';
     }
 
     public AttendanceStatus getStatus() {

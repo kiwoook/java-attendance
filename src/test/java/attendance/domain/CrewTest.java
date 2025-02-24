@@ -23,7 +23,7 @@ class CrewTest {
     void test1() {
         String name = "꾹이";
         LocalDate now = LocalDate.now();
-        assertThatCode(() -> Crew.from(name, now))
+        assertThatCode(() -> Crew.of(name, now))
                 .doesNotThrowAnyException();
     }
 
@@ -33,7 +33,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.from(crewName, today);
+        Crew crew = Crew.of(crewName, today);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
         Map<LocalDate, Attendance> map = new HashMap<>();
@@ -42,9 +42,7 @@ class CrewTest {
         map.put(localDate, attendance);
         Crew expect = new Crew(crewName, map, today);
 
-        crew.addAttendance(localDate, attendance);
-
-        assertThat(crew).isEqualTo(expect);
+        assertThat(crew.addAttendance(localDate, localTime)).isEqualTo(expect);
     }
 
     @DisplayName("똑같은 출석이 존재하면 에러를 반환한다.")
@@ -53,14 +51,13 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.from(crewName, today);
+        Crew crew = Crew.of(crewName, today);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
 
-        Attendance attendance = new Attendance(localDate, localTime);
-        crew.addAttendance(localDate, attendance);
+        Crew adddedCrew = crew.addAttendance(localDate, localTime);
 
-        assertThatThrownBy(() -> crew.addAttendance(localDate, attendance))
+        assertThatThrownBy(() -> adddedCrew.addAttendance(localDate, localTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.ALREADY_ATTENDANCE.getMessage());
     }
@@ -71,12 +68,11 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.from(crewName, today);
+        Crew crew = Crew.of(crewName, today);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
 
-        Attendance attendance = new Attendance(localDate, localTime);
-        crew.addAttendance(localDate, attendance);
+        crew = crew.addAttendance(localDate, localTime);
 
         assertThat(crew.getAttendanceTimeByDate(localDate)).isEqualTo(localTime);
 
@@ -88,7 +84,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.from(crewName, today);
+        Crew crew = Crew.of(crewName, today);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
 
         assertThatThrownBy(() -> crew.getAttendanceTimeByDate(localDate))
@@ -98,22 +94,37 @@ class CrewTest {
 
     @DisplayName("출석을 수정할 수 있다.")
     @Test
-    void editAttendanceTest() {
+    void editAttendanceTest1() {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.from(crewName, today);
+        Crew crew = Crew.of(crewName, today);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
+        crew = crew.addAttendance(localDate, localTime);
+
         Map<LocalDate, Attendance> map = new HashMap<>();
 
         Attendance attendance = new Attendance(localDate, localTime);
         map.put(localDate, attendance);
         Crew expect = new Crew(crewName, map, today);
 
-        crew.addAttendance(localDate, attendance);
+        assertThat(crew.editAttendance(localDate, localTime)).isEqualTo(expect);
+    }
 
-        assertThat(crew).isEqualTo(expect);
+    @DisplayName("수정하려는 출석 날짜가 존재하지 않으면 에러가 발생한다.")
+    @Test
+    void editAttendanceTest2() {
+        String crewName = "꾹이";
+        LocalDate today = LocalDate.of(2024, 12, 6);
+
+        Crew crew = Crew.of(crewName, today);
+        LocalDate localDate = LocalDate.of(2024, 12, 2);
+        LocalTime localTime = LocalTime.of(10, 0);
+
+        assertThatThrownBy(() -> crew.editAttendance(localDate, localTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NOT_EXIST_ATTENDANCE.getMessage());
     }
 
     @DisplayName("기준 날짜를 받아와 AttendceStats를 받아온다.")
@@ -122,16 +133,14 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 10);
 
-        Crew crew = Crew.from(crewName, today);
+        Crew crew = Crew.of(crewName, today);
         List<Integer> days = List.of(2, 3, 4, 5, 6, 9);
 
         for (int day : days) {
             LocalDate localDate = LocalDate.of(2024, 12, day);
             LocalTime localTime = LocalTime.of(14, 0);
 
-            Attendance attendance = new Attendance(localDate, localTime);
-
-            crew.addAttendance(localDate, attendance);
+            crew = crew.addAttendance(localDate, localTime);
         }
 
         assertThat(crew.getAttendanceStatsCountByDate(today)).isEqualTo(List.of(0, 0, 6));
@@ -144,16 +153,14 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 10);
 
-        Crew crew = Crew.from(crewName, today);
+        Crew crew = Crew.of(crewName, today);
         List<Integer> days = List.of(2, 3, 4, 5, 6, 9);
 
         for (int day : days) {
             LocalDate localDate = LocalDate.of(2024, 12, day);
             LocalTime localTime = LocalTime.of(14, 0);
 
-            Attendance attendance = new Attendance(localDate, localTime);
-
-            crew.addAttendance(localDate, attendance);
+            crew = crew.addAttendance(localDate, localTime);
         }
 
         assertThat(crew.getPenaltyStatusByDate(today)).isEqualTo(PenaltyStatus.EXPULSION);
