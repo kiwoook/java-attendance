@@ -1,6 +1,5 @@
-package attendance.domain;
+package attendance.common;
 
-import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_DAY;
 import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_TIME;
 
 import attendance.utils.WorkDayChecker;
@@ -11,6 +10,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public enum AttendanceStatus {
+    // TODO 비즈니스 로직이 존재하지 않으므로 common 패키지에 존재해도 괜찮다 생각
+
     PRESENCE("출석"),
     LATE("지각"),
     ABSENCE("결석");
@@ -25,7 +26,7 @@ public enum AttendanceStatus {
     }
 
     public static AttendanceStatus of(LocalDate attendanceDate, LocalTime attendanceTime) {
-        validateOpenDay(attendanceDate);
+        WorkDayChecker.validWorkDay(attendanceDate);
         validateOpenTime(attendanceTime);
 
         if (attendanceDate.getDayOfWeek() == DayOfWeek.MONDAY) {
@@ -47,10 +48,6 @@ public enum AttendanceStatus {
         return PRESENCE;
     }
 
-    private static void validateOpenDay(LocalDate attendanceDate) {
-        WorkDayChecker.validWorkDay(attendanceDate);
-    }
-
     private static void validateOpenTime(LocalTime attendanceTime) {
         if (attendanceTime.isAfter(LocalTime.of(23, 0)) || attendanceTime.isBefore(LocalTime.of(8, 0))) {
             throw new IllegalArgumentException(INVALID_ATTENDANCE_TIME.getMessage());
@@ -65,7 +62,6 @@ public enum AttendanceStatus {
 
         return map;
     }
-
 
     public String getKorean() {
         return korean;
