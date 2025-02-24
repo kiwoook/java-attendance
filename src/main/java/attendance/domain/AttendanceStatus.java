@@ -3,9 +3,12 @@ package attendance.domain;
 import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_DAY;
 import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_TIME;
 
+import attendance.utils.WorkDayChecker;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.EnumMap;
+import java.util.Map;
 
 public enum AttendanceStatus {
     PRESENCE("출석"),
@@ -45,21 +48,22 @@ public enum AttendanceStatus {
     }
 
     private static void validateOpenDay(LocalDate attendanceDate) {
-        DayOfWeek dayOfWeek = attendanceDate.getDayOfWeek();
-
-        if (attendanceDate.getDayOfMonth() == 25) {
-            throw new IllegalArgumentException(INVALID_ATTENDANCE_DAY.getMessage());
-        }
-
-        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
-            throw new IllegalArgumentException(INVALID_ATTENDANCE_DAY.getMessage());
-        }
+        WorkDayChecker.validWorkDay(attendanceDate);
     }
 
     private static void validateOpenTime(LocalTime attendanceTime) {
         if (attendanceTime.isAfter(LocalTime.of(23, 0)) || attendanceTime.isBefore(LocalTime.of(8, 0))) {
             throw new IllegalArgumentException(INVALID_ATTENDANCE_TIME.getMessage());
         }
+    }
+
+    public static Map<AttendanceStatus, Integer> initCountsMap() {
+        Map<AttendanceStatus, Integer> map = new EnumMap<>(AttendanceStatus.class);
+        for (AttendanceStatus status : AttendanceStatus.values()) {
+            map.put(status, 0);
+        }
+
+        return map;
     }
 
 
