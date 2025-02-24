@@ -17,13 +17,22 @@ public class AttendanceStats {
 
     public static AttendanceStats of(Map<LocalDate, Attendance> attendanceMap, LocalDate currentDate) {
         Map<AttendanceStatus, Integer> counts = AttendanceStatus.initCountsMap();
-        LocalDate day = Constants.START_DAY;
+        LocalDate day = Constants.START_DATE;
+        LocalDate endDate = toMinEndDate(currentDate);
 
-        while (day.isBefore(currentDate)) {
+        while (day.isBefore(endDate)) {
             day = dayProcess(attendanceMap, day, counts);
         }
 
         return new AttendanceStats(counts);
+    }
+
+    private static LocalDate toMinEndDate(LocalDate currentDate) {
+        if (currentDate.isAfter(Constants.END_DATE)) {
+            return Constants.END_DATE;
+        }
+
+        return currentDate;
     }
 
     private static LocalDate dayProcess(Map<LocalDate, Attendance> attendanceMap,
