@@ -3,6 +3,7 @@ package attendance.domain;
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,17 +30,32 @@ public class Crew implements Comparable<Crew> {
         this.today = today;
     }
 
-    public static Crew from(String name, LocalDate today) {
+    public static Crew of(String name, LocalDate today) {
         return new Crew(name, today);
     }
 
-    public void addAttendance(LocalDate attendanceDate, Attendance attendance) {
-
+    public Crew addAttendance(LocalDate attendanceDate, LocalTime attendanceTime) {
         if (attendanceMap.containsKey(attendanceDate)) {
             throw new IllegalArgumentException(ErrorMessage.ALREADY_ATTENDANCE.getMessage());
         }
 
-        attendanceMap.put(attendanceDate, attendance);
+        HashMap<LocalDate, Attendance> attendanceHashMap = new HashMap<>(attendanceMap);
+        attendanceHashMap.put(attendanceDate, Attendance.of(attendanceDate, attendanceTime));
+
+        return new Crew(name, attendanceHashMap, today);
+    }
+
+    public Crew editAttendance(LocalDate attendanceDate, LocalTime editTime) {
+        if (!attendanceMap.containsKey(attendanceDate)) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_ATTENDANCE.getMessage());
+        }
+
+        HashMap<LocalDate, Attendance> attendanceHashMap = new HashMap<>(attendanceMap);
+        Attendance editAttendance = attendanceMap.get(attendanceDate)
+                .editTime(editTime);
+        attendanceHashMap.put(attendanceDate, editAttendance);
+
+        return new Crew(name, attendanceHashMap, today);
     }
 
     public LocalTime getAttendanceTimeByDate(LocalDate attendanceDate) {
@@ -71,6 +87,7 @@ public class Crew implements Comparable<Crew> {
                 .filter(entry -> entry.getKey().isBefore(localDate))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -106,5 +123,18 @@ public class Crew implements Comparable<Crew> {
         }
 
         return this.name.compareTo(o.name);
+    }
+
+    @Override
+    public String toString() {
+        return "Crew{" +
+                "name='" + name + '\'' +
+                ", attendanceMap=" + attendanceMap +
+                ", today=" + today +
+                '}';
+    }
+
+    public String getName() {
+        return name;
     }
 }

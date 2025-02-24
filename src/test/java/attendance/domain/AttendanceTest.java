@@ -36,27 +36,6 @@ class AttendanceTest {
                 .hasMessage(ErrorMessage.INVALID_ATTENDANCE_DAY.getMessage());
     }
 
-    @DisplayName("해당 출석 날짜이면 true를 반환한다")
-    @Test
-    void test3() {
-        LocalDate localDate = LocalDate.of(2024, 12, 16);
-        LocalTime localTime = LocalTime.of(10, 0);
-        Attendance attendance = new Attendance(localDate, localTime);
-
-        assertThat(attendance.isLocalDate(localDate)).isTrue();
-
-    }
-
-    @DisplayName("해당 출석 날짜가 아니면 false를 반환한다.")
-    @Test
-    void test4() {
-        LocalDate localDate = LocalDate.of(2024, 12, 16);
-        LocalTime localTime = LocalTime.of(10, 0);
-        Attendance attendance = new Attendance(localDate, localTime);
-
-        assertThat(attendance.isLocalDate(localDate.plusDays(1))).isFalse();
-    }
-
     @DisplayName("출석 시간을 수정할 수 있다.")
     @Test
     void test5() {
@@ -67,9 +46,7 @@ class AttendanceTest {
         LocalTime editTime = LocalTime.of(11, 0);
         Attendance expect = new Attendance(localDate, editTime);
 
-        attendance.editTime(editTime);
-
-        assertThat(attendance).isEqualTo(expect);
+        assertThat(attendance.editTime(editTime)).isEqualTo(expect);
     }
 
     @DisplayName("출석, 지각, 결석 여부를 알 수 있다.")
