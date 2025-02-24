@@ -1,10 +1,9 @@
 package attendance.domain;
 
-import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_DAY;
 import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_TIME;
 
+import attendance.common.AttendanceStatus;
 import attendance.utils.WorkDayChecker;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -37,6 +36,11 @@ public class Attendance {
 
     public void editTime(LocalTime editTime) {
         this.attendanceTime = editTime;
+    }
+
+
+    public LocalTime getAttendanceTime() {
+        return attendanceTime;
     }
 
     @Override

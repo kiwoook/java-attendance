@@ -17,7 +17,6 @@ public enum PenaltyStatus {
         this.predicate = predicate;
     }
 
-
     public static PenaltyStatus of(int lateCount, int absenceCount) {
         int count = lateCount / 3 + absenceCount;
 

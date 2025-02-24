@@ -3,6 +3,7 @@ package attendance.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import attendance.common.AttendanceStatus;
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
 import java.time.LocalTime;
