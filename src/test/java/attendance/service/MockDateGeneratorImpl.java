@@ -1,0 +1,10 @@
+package attendance.service;
+
+import java.time.LocalDate;
+
+public class MockDateGeneratorImpl implements DateGenerator {
+    @Override
+    public LocalDate now() {
+        return LocalDate.of(2024, 12, 14);
+    }
+}
