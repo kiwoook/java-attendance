@@ -82,6 +82,41 @@ class CrewsTest {
                 .hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
     }
 
+    @DisplayName("이름이 존재하는지 확인한다.")
+    @Test
+    void validateNameTest1(){
+        // given
+        LocalDate now = LocalDate.of(2024, 12, 16);
+
+        Crews crews = Crews.create(now);
+        String name = "꾹이";
+
+        LocalDate localDate = LocalDate.of(2024, 12, 2);
+        LocalDate today = localDate.plusDays(1);
+        LocalTime localTime = LocalTime.of(10, 0);
+
+        crews = crews.addAttendance(name, localDate, localTime);
+
+        // when
+        Crews finalCrews = crews;
+        assertThatCode(() -> finalCrews.validateName(name))
+                .doesNotThrowAnyException();
+
+    }
+
+    @DisplayName("이름이 존재하지 않으면 예외를 발생한다.")
+    @Test
+    void validateNameTest2(){
+        // given
+        LocalDate now = LocalDate.of(2024, 12, 16);
+        String name = "꾹이";
+        Crews crews = Crews.create(now);
+
+        assertThatThrownBy(() ->  crews.validateName(name))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
+    }
+
     // 어떻게 해야 쉽게 테스트할 수 있는 것인가?
 
     @DisplayName("해당 크루의 제적 위험자를 확인할 수 있다.")
