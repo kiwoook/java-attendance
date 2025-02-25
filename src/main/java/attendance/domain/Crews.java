@@ -61,6 +61,15 @@ public class Crews {
         }
     }
 
+    public LocalTime getAttendanceTimeByNameAndDate(String name, LocalDate localDate) {
+        if (!crewMap.containsKey(name)) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_CREW.getMessage());
+        }
+
+        return getCrewByName(name)
+                .getAttendanceTimeByDate(localDate);
+    }
+
     public List<Crew> getSortedCrews() {
         return crewMap.values()
                 .stream()
@@ -75,4 +84,5 @@ public class Crews {
                 ", today=" + today +
                 '}';
     }
+
 }

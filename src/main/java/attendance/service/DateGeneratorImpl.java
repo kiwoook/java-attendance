@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class DateGeneratorImpl implements DateGenerator {
     @Override
-    public LocalDate now() {
+    public LocalDate generate() {
         return LocalDate.now();
     }
 }

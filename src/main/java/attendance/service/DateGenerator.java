@@ -4,5 +4,5 @@ import java.time.LocalDate;
 
 public interface DateGenerator {
 
-    LocalDate now();
+    LocalDate generate();
 }

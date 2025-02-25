@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class MockDateGeneratorImpl implements DateGenerator {
     @Override
-    public LocalDate now() {
+    public LocalDate generate() {
         return LocalDate.of(2024, 12, 14);
     }
 }

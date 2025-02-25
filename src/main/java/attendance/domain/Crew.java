@@ -88,6 +88,9 @@ public class Crew implements Comparable<Crew> {
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
+    public String getName() {
+        return name;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -103,11 +106,6 @@ public class Crew implements Comparable<Crew> {
         return Objects.hash(name, attendanceMap);
     }
 
-    private Integer getPriorityCount(LocalDate today) {
-        Map<LocalDate, Attendance> collected = getAttendanceMapUntilDate(today);
-
-        return AttendanceStats.of(collected, today).priorityCount();
-    }
 
 
     @Override
@@ -125,6 +123,13 @@ public class Crew implements Comparable<Crew> {
         return this.name.compareTo(o.name);
     }
 
+    private Integer getPriorityCount(LocalDate today) {
+        Map<LocalDate, Attendance> collected = getAttendanceMapUntilDate(today);
+
+        return AttendanceStats.of(collected, today).priorityCount();
+    }
+
+
     @Override
     public String toString() {
         return "Crew{" +
@@ -134,7 +139,5 @@ public class Crew implements Comparable<Crew> {
                 '}';
     }
 
-    public String getName() {
-        return name;
-    }
+
 }

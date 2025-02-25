@@ -147,7 +147,7 @@ class CrewTest {
 
     }
 
-    @DisplayName("기준 날짜를 받아와 PenaltyStatus를 받아온다.")
+    @DisplayName("기준 날짜를 받아와 PenaltyStatus를 반환한다.")
     @Test
     void getPenaltyStatusByDateTest() {
         String crewName = "꾹이";
@@ -165,6 +165,5 @@ class CrewTest {
 
         assertThat(crew.getPenaltyStatusByDate(today)).isEqualTo(PenaltyStatus.EXPULSION);
     }
-
 
 }
