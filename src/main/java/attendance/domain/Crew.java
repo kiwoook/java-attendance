@@ -11,27 +11,24 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-public class Crew implements Comparable<Crew> {
+public class Crew {
 
     private final String name;
     private final Map<LocalDate, Attendance> attendanceMap;
-    private final LocalDate today;
 
     // TODO 테스트만을 하기 위한 생성자 괜찮을까?
-    public Crew(String name, Map<LocalDate, Attendance> attendanceMap, LocalDate today) {
+    public Crew(String name, Map<LocalDate, Attendance> attendanceMap) {
         this.name = name;
         this.attendanceMap = attendanceMap;
-        this.today = today;
     }
 
-    public Crew(String name, LocalDate today) {
+    public Crew(String name) {
         this.name = name;
         this.attendanceMap = new TreeMap<>();
-        this.today = today;
     }
 
-    public static Crew of(String name, LocalDate today) {
-        return new Crew(name, today);
+    public static Crew of(String name) {
+        return new Crew(name);
     }
 
     public Crew addAttendance(LocalDate attendanceDate, LocalTime attendanceTime) {
@@ -42,7 +39,7 @@ public class Crew implements Comparable<Crew> {
         HashMap<LocalDate, Attendance> attendanceHashMap = new HashMap<>(attendanceMap);
         attendanceHashMap.put(attendanceDate, Attendance.of(attendanceDate, attendanceTime));
 
-        return new Crew(name, attendanceHashMap, today);
+        return new Crew(name, attendanceHashMap);
     }
 
     public Crew editAttendance(LocalDate attendanceDate, LocalTime editTime) {
@@ -55,7 +52,7 @@ public class Crew implements Comparable<Crew> {
                 .editTime(editTime);
         attendanceHashMap.put(attendanceDate, editAttendance);
 
-        return new Crew(name, attendanceHashMap, today);
+        return new Crew(name, attendanceHashMap);
     }
 
     public LocalTime getAttendanceTimeByDate(LocalDate attendanceDate) {
@@ -106,38 +103,17 @@ public class Crew implements Comparable<Crew> {
         return Objects.hash(name, attendanceMap);
     }
 
-
-
-    @Override
-    public int compareTo(Crew o) {
-        int penaltyCompareTo = this.getPenaltyStatusByDate(today).compareTo(o.getPenaltyStatusByDate(today));
-        if (penaltyCompareTo != 0) {
-            return penaltyCompareTo;
-        }
-
-        int priorityCountCompareTo = this.getPriorityCount(today).compareTo(o.getPriorityCount(today));
-        if (priorityCountCompareTo != 0) {
-            return -priorityCountCompareTo;
-        }
-
-        return this.name.compareTo(o.name);
-    }
-
-    private Integer getPriorityCount(LocalDate today) {
+    public Integer getPriorityCount(LocalDate today) {
         Map<LocalDate, Attendance> collected = getAttendanceMapUntilDate(today);
 
         return AttendanceStats.of(collected, today).priorityCount();
     }
-
 
     @Override
     public String toString() {
         return "Crew{" +
                 "name='" + name + '\'' +
                 ", attendanceMap=" + attendanceMap +
-                ", today=" + today +
                 '}';
     }
-
-
 }
