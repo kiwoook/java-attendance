@@ -17,7 +17,7 @@ class CrewsTest {
     @Test
     void test1() {
         LocalDate now = LocalDate.of(2024, 12, 16);
-        assertThatCode(() -> Crews.create(now))
+        assertThatCode(Crews::create)
                 .doesNotThrowAnyException();
 
     }
@@ -28,14 +28,14 @@ class CrewsTest {
         // given
         LocalDate now = LocalDate.of(2024, 12, 16);
 
-        Crews crews = Crews.create(now);
+        Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalDate today = localDate.plusDays(1);
         LocalTime localTime = LocalTime.of(10, 0);
 
-        Crew expect = Crew.of(name, today).addAttendance(localDate, localTime);
+        Crew expect = Crew.of(name).addAttendance(localDate, localTime);
 
         // when
         Crews result = crews.addAttendance(name, localDate, localTime);
@@ -50,7 +50,7 @@ class CrewsTest {
         // given
         LocalDate now = LocalDate.of(2024, 12, 16);
 
-        Crews crews = Crews.create(now);
+        Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -58,7 +58,7 @@ class CrewsTest {
         LocalTime localTime = LocalTime.of(10, 0);
         LocalTime editTime = LocalTime.of(11, 0);
 
-        Crew expect = Crew.of(name, today).addAttendance(localDate, editTime);
+        Crew expect = Crew.of(name).addAttendance(localDate, editTime);
         crews = crews.addAttendance(name, localDate, localTime);
 
         // when
@@ -75,7 +75,7 @@ class CrewsTest {
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime editTime = LocalTime.of(11, 0);
 
-        Crews crews = Crews.create(now);
+        Crews crews = Crews.create();
 
         assertThatThrownBy(() -> crews.editAttendance(name, localDate, editTime))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -88,7 +88,7 @@ class CrewsTest {
         // given
         LocalDate now = LocalDate.of(2024, 12, 16);
 
-        Crews crews = Crews.create(now);
+        Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -109,7 +109,7 @@ class CrewsTest {
         // given
         LocalDate now = LocalDate.of(2024, 12, 16);
         String name = "꾹이";
-        Crews crews = Crews.create(now);
+        Crews crews = Crews.create();
 
         assertThatThrownBy(() -> crews.validateName(name))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -121,7 +121,7 @@ class CrewsTest {
     void getAttendanceTimeByNameAndDateTest1() {
         LocalDate now = LocalDate.of(2024, 12, 16);
 
-        Crews crews = Crews.create(now);
+        Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -139,7 +139,7 @@ class CrewsTest {
     void getAttendanceTimeByNameAndDateTest2() {
         LocalDate now = LocalDate.of(2024, 12, 16);
 
-        Crews crews = Crews.create(now);
+        Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -154,7 +154,7 @@ class CrewsTest {
     void getAttendanceTimeByNameAndDateTest3() {
         LocalDate now = LocalDate.of(2024, 12, 16);
 
-        Crews crews = Crews.create(now);
+        Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -180,7 +180,7 @@ class CrewsTest {
         LocalDate today = LocalDate.of(2024, 12, 7);
         LocalTime presenceTime = LocalTime.of(10, 0);
 
-        Crews crews = Crews.create(today);
+        Crews crews = Crews.create();
         // 기준날은 12월 7일로 한다.
         // 12월 2일부터 6일까지 출석한 날을 넣어준다.
         // 넣어지지 않은 날짜는 결석으로 처리될 것이다.
@@ -194,7 +194,7 @@ class CrewsTest {
         }
 
         // then
-        List<String> result = crews.getSortedCrews().stream().map(Crew::getName).toList();
+        List<String> result = crews.getSortedCrews(today).stream().map(Crew::getName).toList();
 
         System.out.println(crews);
 

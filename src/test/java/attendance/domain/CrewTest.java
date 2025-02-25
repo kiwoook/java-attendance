@@ -22,8 +22,7 @@ class CrewTest {
     @Test
     void test1() {
         String name = "꾹이";
-        LocalDate now = LocalDate.now();
-        assertThatCode(() -> Crew.of(name, now))
+        assertThatCode(() -> Crew.of(name))
                 .doesNotThrowAnyException();
     }
 
@@ -33,14 +32,14 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.of(crewName, today);
+        Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
         Map<LocalDate, Attendance> map = new HashMap<>();
 
         Attendance attendance = new Attendance(localDate, localTime);
         map.put(localDate, attendance);
-        Crew expect = new Crew(crewName, map, today);
+        Crew expect = new Crew(crewName, map);
 
         assertThat(crew.addAttendance(localDate, localTime)).isEqualTo(expect);
     }
@@ -51,7 +50,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.of(crewName, today);
+        Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
 
@@ -68,7 +67,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.of(crewName, today);
+        Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
 
@@ -84,7 +83,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.of(crewName, today);
+        Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
 
         assertThatThrownBy(() -> crew.getAttendanceTimeByDate(localDate))
@@ -98,7 +97,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.of(crewName, today);
+        Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
         crew = crew.addAttendance(localDate, localTime);
@@ -107,7 +106,7 @@ class CrewTest {
 
         Attendance attendance = new Attendance(localDate, localTime);
         map.put(localDate, attendance);
-        Crew expect = new Crew(crewName, map, today);
+        Crew expect = new Crew(crewName, map);
 
         assertThat(crew.editAttendance(localDate, localTime)).isEqualTo(expect);
     }
@@ -118,7 +117,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 6);
 
-        Crew crew = Crew.of(crewName, today);
+        Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
 
@@ -133,7 +132,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 10);
 
-        Crew crew = Crew.of(crewName, today);
+        Crew crew = Crew.of(crewName);
         List<Integer> days = List.of(2, 3, 4, 5, 6, 9);
 
         for (int day : days) {
@@ -153,7 +152,7 @@ class CrewTest {
         String crewName = "꾹이";
         LocalDate today = LocalDate.of(2024, 12, 10);
 
-        Crew crew = Crew.of(crewName, today);
+        Crew crew = Crew.of(crewName);
         List<Integer> days = List.of(2, 3, 4, 5, 6, 9);
 
         for (int day : days) {

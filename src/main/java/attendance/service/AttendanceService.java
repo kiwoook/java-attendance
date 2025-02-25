@@ -15,7 +15,7 @@ public class AttendanceService {
 
     public AttendanceService(DateGenerator dateGenerator) {
         this.dateGenerator = dateGenerator;
-        this.crews = Crews.create(dateGenerator.generate());
+        this.crews = Crews.create();
     }
 
     // 어떻게 테스트 코드를 작성하는게 좋을 것인가?
