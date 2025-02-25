@@ -165,4 +165,26 @@ class CrewTest {
         assertThat(crew.getPenaltyStatusByDate(today)).isEqualTo(PenaltyStatus.EXPULSION);
     }
 
+    @DisplayName("오름차순으로 정렬된 날짜를 반환한다.")
+    @Test
+    void getAttendanceResultByNameTest() {
+        String crewName = "꾹이";
+
+        Crew crew = Crew.of(crewName);
+
+        List<LocalDate> dates = List.of(
+                LocalDate.of(2024, 12, 13),
+                LocalDate.of(2024, 12, 12),
+                LocalDate.of(2024, 12, 18)
+        );
+
+        List<Attendance> expected = dates.stream().sorted().map(date -> new Attendance(date, LocalTime.of(10, 0)))
+                .toList();
+
+        crew = dates.stream()
+                .reduce(crew, (updateCrew, date) -> updateCrew.addAttendance(date, LocalTime.of(10, 0)),
+                        (a, b) -> b);
+
+        assertThat(crew.getAttendancesSortedByDate()).isEqualTo(expected);
+    }
 }

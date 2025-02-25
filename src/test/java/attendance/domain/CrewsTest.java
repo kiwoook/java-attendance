@@ -17,8 +17,7 @@ class CrewsTest {
     @Test
     void test1() {
         LocalDate now = LocalDate.of(2024, 12, 16);
-        assertThatCode(Crews::create)
-                .doesNotThrowAnyException();
+        assertThatCode(Crews::create).doesNotThrowAnyException();
 
     }
 
@@ -77,9 +76,8 @@ class CrewsTest {
 
         Crews crews = Crews.create();
 
-        assertThatThrownBy(() -> crews.editAttendance(name, localDate, editTime))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
+        assertThatThrownBy(() -> crews.editAttendance(name, localDate, editTime)).isInstanceOf(
+                IllegalArgumentException.class).hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
     }
 
     @DisplayName("이름이 존재하는지 확인한다.")
@@ -98,8 +96,7 @@ class CrewsTest {
 
         // when
         Crews finalCrews = crews;
-        assertThatCode(() -> finalCrews.validateName(name))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> finalCrews.validateName(name)).doesNotThrowAnyException();
 
     }
 
@@ -111,8 +108,7 @@ class CrewsTest {
         String name = "꾹이";
         Crews crews = Crews.create();
 
-        assertThatThrownBy(() -> crews.validateName(name))
-                .isInstanceOf(IllegalArgumentException.class)
+        assertThatThrownBy(() -> crews.validateName(name)).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
     }
 
@@ -144,9 +140,8 @@ class CrewsTest {
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
 
-        assertThatThrownBy(() -> crews.getAttendanceTimeByNameAndDate(name, localDate))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
+        assertThatThrownBy(() -> crews.getAttendanceTimeByNameAndDate(name, localDate)).isInstanceOf(
+                IllegalArgumentException.class).hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
     }
 
     @DisplayName("날짜가 잘못되면 예외를 반환한다.")
@@ -164,9 +159,8 @@ class CrewsTest {
         crews = crews.addAttendance(name, localDate, localTime);
 
         Crews finalCrews = crews;
-        assertThatThrownBy(() -> finalCrews.getAttendanceTimeByNameAndDate(name, wrongDate))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ErrorMessage.NOT_EXIST_ATTENDANCE.getMessage());
+        assertThatThrownBy(() -> finalCrews.getAttendanceTimeByNameAndDate(name, wrongDate)).isInstanceOf(
+                IllegalArgumentException.class).hasMessage(ErrorMessage.NOT_EXIST_ATTENDANCE.getMessage());
     }
 
     // 어떻게 해야 쉽게 테스트할 수 있는 것인가?
@@ -202,5 +196,30 @@ class CrewsTest {
         assertThat(result).isEqualTo(expect);
     }
 
-    // 지각도 넣고 오름차순도 할 필요가 있으나 테스트 케이스 만들기가 어려움...
+    // TODO 지각도 넣고 오름차순도 할 필요가 있으나 테스트 케이스 만들기가 어려움...
+
+    @DisplayName("이름을 입력받아 오름차순으로 정렬된 날짜를 반환한다.")
+    @Test
+    void getSortedAttendancesByNameTest() {
+        // Given
+        String crewName = "꾹이";
+        Crews crews = Crews.create();
+
+        List<LocalDate> dates = List.of(LocalDate.of(2024, 12, 13), LocalDate.of(2024, 12, 12),
+                LocalDate.of(2024, 12, 18));
+
+        crews = dates.stream()
+                .reduce(crews, (updatedCrews, date) ->
+                                updatedCrews.addAttendance(crewName, date, LocalTime.of(10, 0)),
+                        (a, b) -> b);
+
+        // When
+        List<Attendance> sortedAttendances = crews.getSortedAttendancesByName(crewName);
+
+        // Then
+        List<Attendance> expected = dates.stream().sorted().map(date -> new Attendance(date, LocalTime.of(10, 0)))
+                .toList();
+
+        assertThat(sortedAttendances).isEqualTo(expected);
+    }
 }
