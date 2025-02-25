@@ -85,6 +85,12 @@ public class Crew {
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
+    public List<Attendance> getAttendancesSortedByDate() {
+        return attendanceMap.values().stream()
+                .sorted().
+                toList();
+    }
+
     public String getName() {
         return name;
     }

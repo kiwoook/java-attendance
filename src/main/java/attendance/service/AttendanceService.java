@@ -19,7 +19,7 @@ public class AttendanceService {
     }
 
     // 어떻게 테스트 코드를 작성하는게 좋을 것인가?
-    // FileReaaderUtil을 필드 주입하지 말고 파라미터로 주입하는게 좋을까?
+    // FileReaderUtil을 필드 주입하지 말고 파라미터로 주입하는게 좋을까?
     // init은 여러 번 사용하지 않으므로 외부에서 주입하는 방법이 옮다 생각한다!
     public void initCrews(List<String> attendanceInfoList) {
         List<CrewCreateDto> crewCreateDtos = attendanceInfoList.stream()

@@ -3,6 +3,7 @@ package attendance.domain;
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,31 +60,25 @@ public class Crews {
     }
 
     public LocalTime getAttendanceTimeByNameAndDate(String name, LocalDate localDate) {
-        if (!crewMap.containsKey(name)) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_CREW.getMessage());
-        }
+        validateName(name);
 
         return getCrewByName(name)
                 .getAttendanceTimeByDate(localDate);
     }
 
-
     // sorted를 재정의해서 넘겨주자
     public List<Crew> getSortedCrews(LocalDate today) {
         return crewMap.values().stream()
-                .sorted((c1, c2) -> {
-                    int penaltyCompareTo = c1.getPenaltyStatusByDate(today).compareTo(c2.getPenaltyStatusByDate(today));
-                    if (penaltyCompareTo != 0) {
-                        return penaltyCompareTo;
-                    }
+                .sorted(
+                        Comparator.comparing((Crew c) -> c.getPenaltyStatusByDate(today))
+                                .thenComparing((Crew c) -> c.getPriorityCount(today), Comparator.reverseOrder())
+                                .thenComparing(Crew::getName)
+                ).toList();
+    }
 
-                    int priorityCountCompareTo = c1.getPriorityCount(today).compareTo(c2.getPriorityCount(today));
-                    if (priorityCountCompareTo != 0) {
-                        return -priorityCountCompareTo;
-                    }
-
-                    return c1.getName().compareTo(c2.getName());
-                }).toList();
+    public List<Attendance> getSortedAttendancesByName(String name) {
+        validateName(name);
+        return getCrewByName(name).getAttendancesSortedByDate();
     }
 
     @Override

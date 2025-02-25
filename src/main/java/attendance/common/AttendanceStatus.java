@@ -37,6 +37,7 @@ public enum AttendanceStatus {
     }
 
     private static AttendanceStatus get(LocalTime criterionTime, LocalTime attendanceTime) {
+        // TODO 매직넘버 상수화하기
         if (attendanceTime.isAfter(criterionTime.plusMinutes(30))) {
             return ABSENCE;
         }

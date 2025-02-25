@@ -7,13 +7,11 @@ import java.util.List;
 
 public class FileReaderUtil {
 
-    private final String filePath;
 
-    public FileReaderUtil(String filePath) {
-        this.filePath = filePath;
+    private FileReaderUtil() {
     }
 
-    public List<String> readFile() {
+    public static List<String> readFile(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             return br.lines()
                     .skip(1)
