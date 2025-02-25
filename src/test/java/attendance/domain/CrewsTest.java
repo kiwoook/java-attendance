@@ -84,7 +84,7 @@ class CrewsTest {
 
     @DisplayName("이름이 존재하는지 확인한다.")
     @Test
-    void validateNameTest1(){
+    void validateNameTest1() {
         // given
         LocalDate now = LocalDate.of(2024, 12, 16);
 
@@ -92,7 +92,6 @@ class CrewsTest {
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
-        LocalDate today = localDate.plusDays(1);
         LocalTime localTime = LocalTime.of(10, 0);
 
         crews = crews.addAttendance(name, localDate, localTime);
@@ -106,19 +105,71 @@ class CrewsTest {
 
     @DisplayName("이름이 존재하지 않으면 예외를 발생한다.")
     @Test
-    void validateNameTest2(){
+    void validateNameTest2() {
         // given
         LocalDate now = LocalDate.of(2024, 12, 16);
         String name = "꾹이";
         Crews crews = Crews.create(now);
 
-        assertThatThrownBy(() ->  crews.validateName(name))
+        assertThatThrownBy(() -> crews.validateName(name))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
     }
 
-    // 어떻게 해야 쉽게 테스트할 수 있는 것인가?
+    @DisplayName("이름과 날짜를 입력받아 LocalTime을 반환한다.")
+    @Test
+    void getAttendanceTimeByNameAndDateTest1() {
+        LocalDate now = LocalDate.of(2024, 12, 16);
 
+        Crews crews = Crews.create(now);
+        String name = "꾹이";
+
+        LocalDate localDate = LocalDate.of(2024, 12, 2);
+        LocalTime localTime = LocalTime.of(10, 0);
+
+        crews = crews.addAttendance(name, localDate, localTime);
+
+        LocalTime result = crews.getAttendanceTimeByNameAndDate(name, localDate);
+
+        assertThat(result).isEqualTo(localTime);
+    }
+
+    @DisplayName("이름이 잘못되면 예외를 반환한다.")
+    @Test
+    void getAttendanceTimeByNameAndDateTest2() {
+        LocalDate now = LocalDate.of(2024, 12, 16);
+
+        Crews crews = Crews.create(now);
+        String name = "꾹이";
+
+        LocalDate localDate = LocalDate.of(2024, 12, 2);
+
+        assertThatThrownBy(() -> crews.getAttendanceTimeByNameAndDate(name, localDate))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
+    }
+
+    @DisplayName("날짜가 잘못되면 예외를 반환한다.")
+    @Test
+    void getAttendanceTimeByNameAndDateTest3() {
+        LocalDate now = LocalDate.of(2024, 12, 16);
+
+        Crews crews = Crews.create(now);
+        String name = "꾹이";
+
+        LocalDate localDate = LocalDate.of(2024, 12, 2);
+        LocalDate wrongDate = localDate.plusDays(1);
+        LocalTime localTime = LocalTime.of(10, 0);
+
+        crews = crews.addAttendance(name, localDate, localTime);
+
+        Crews finalCrews = crews;
+        assertThatThrownBy(() -> finalCrews.getAttendanceTimeByNameAndDate(name, wrongDate))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NOT_EXIST_ATTENDANCE.getMessage());
+    }
+
+    // 어떻게 해야 쉽게 테스트할 수 있는 것인가?
     @DisplayName("해당 크루의 제적 위험자를 확인할 수 있다.")
     @Test
     void getSortedCrewsTest() {

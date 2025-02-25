@@ -10,7 +10,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public enum AttendanceStatus {
-    //TODO 비즈니스 로직이 존재하지 않으므로 common 패키지에 존재해도 괜찮다 생각
+    // TODO 비즈니스 로직이 존재하지 않으므로 common 패키지에 존재해도 괜찮다 생각
 
     PRESENCE("출석"),
     LATE("지각"),

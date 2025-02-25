@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class Attendance {
+public class Attendance implements Comparable<Attendance> {
 
     private final LocalDate attendanceDate;
     private final LocalTime attendanceTime;
@@ -38,8 +38,16 @@ public class Attendance {
         return new Attendance(attendanceDate, editTime);
     }
 
+    public LocalDate getAttendanceDate() {
+        return attendanceDate;
+    }
+
     public LocalTime getAttendanceTime() {
         return attendanceTime;
+    }
+
+    public AttendanceStatus getStatus() {
+        return AttendanceStatus.of(attendanceDate, attendanceTime);
     }
 
     @Override
@@ -65,7 +73,8 @@ public class Attendance {
                 '}';
     }
 
-    public AttendanceStatus getStatus() {
-        return AttendanceStatus.of(attendanceDate, attendanceTime);
+    @Override
+    public int compareTo(Attendance o) {
+        return this.attendanceDate.compareTo(o.attendanceDate);
     }
 }
