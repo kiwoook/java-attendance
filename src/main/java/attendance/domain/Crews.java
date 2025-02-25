@@ -55,6 +55,12 @@ public class Crews {
         return new Crews(crewHashMap, today);
     }
 
+    public void validateName(String name) {
+        if (!crewMap.containsKey(name)) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_CREW.getMessage());
+        }
+    }
+
     public List<Crew> getSortedCrews() {
         return crewMap.values()
                 .stream()
