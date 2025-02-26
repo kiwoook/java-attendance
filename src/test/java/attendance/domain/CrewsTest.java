@@ -125,7 +125,7 @@ class CrewsTest {
         LocalTime presenceTime = LocalTime.of(10, 0);
 
         Crews crews = Crews.create();
-        
+
         // 기준날은 12월 7일로 한다.
         // 12월 2일부터 6일까지 출석한 날을 넣어준다.
         // 넣어지지 않은 날짜는 결석으로 처리될 것이다.

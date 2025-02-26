@@ -11,10 +11,12 @@ import attendance.domain.PenaltyStatus;
 import attendance.dto.AttendanceChangeInfoDto;
 import attendance.dto.AttendanceInfoDto;
 import attendance.dto.CrewAttendanceResultDto;
+import attendance.dto.DangerCrewDto;
 import attendance.utils.FileReaderUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -184,8 +186,28 @@ class AttendanceServiceTest {
 
     @DisplayName("제적 위험자 확인")
     @Nested
-    class DangerCrews{
+    class DangerCrews {
 
+        @DisplayName("날짜를 입력받아 제적 위험자를 조회한다.")
+        @Test
+        void getDangerCrews() {
+            // given
+            LocalDate today = LocalDate.of(2024, 12, 16);
+            attendanceService = new AttendanceService(() -> today);
+
+            List<String> expectNameList = Stream.of("쿠키", "빙봉", "빙티", "이든")
+                    .sorted()
+                    .toList();
+
+            attendanceService.initCrews(getTestCrews());
+
+            // when
+            List<DangerCrewDto> result = attendanceService.getDangerCrews();
+
+            // then
+            List<String> nameList = result.stream().map(DangerCrewDto::name).toList();
+            assertAll(() -> assertThat(nameList).isEqualTo(expectNameList));
+        }
     }
 
 

@@ -9,6 +9,7 @@ import attendance.dto.AttendanceChangeInfoDto;
 import attendance.dto.AttendanceInfoDto;
 import attendance.dto.CrewAttendanceResultDto;
 import attendance.dto.CrewCreateDto;
+import attendance.dto.DangerCrewDto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -69,10 +70,23 @@ public class AttendanceService {
         List<AttendanceInfoDto> attendanceInfoDtos = crew.getAttendancesSortedByDate().stream()
                 .map(AttendanceInfoDto::from).toList();
 
-        LocalDate now = dateGenerator.generate();
-        AttendanceStats attendanceStats = crew.getAttendanceStatsByDate(now);
-        PenaltyStatus penaltyStatus = crew.getPenaltyStatusByDate(now);
+        LocalDate today = dateGenerator.generate();
+        AttendanceStats attendanceStats = crew.getAttendanceStatsByDate(today);
+        PenaltyStatus penaltyStatus = crew.getPenaltyStatusByDate(today);
 
         return CrewAttendanceResultDto.of(attendanceInfoDtos, attendanceStats, penaltyStatus);
     }
+
+    public List<DangerCrewDto> getDangerCrews() {
+        LocalDate today = dateGenerator.generate();
+
+        return crews.getSortedDangerCrews(today).stream()
+                .map(dangerCrew -> DangerCrewDto.of(
+                        dangerCrew,
+                        dangerCrew.getAttendanceStatsByDate(today),
+                        dangerCrew.getPenaltyStatusByDate(today)
+                ))
+                .toList();
+    }
+
 }
