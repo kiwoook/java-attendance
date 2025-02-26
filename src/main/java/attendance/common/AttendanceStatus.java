@@ -18,6 +18,8 @@ public enum AttendanceStatus {
 
     private static final LocalTime MONDAY_OPEN_TIME = LocalTime.of(13, 0);
     private static final LocalTime WEEKDAY_OPEN_TIME = LocalTime.of(10, 0);
+    private static final int ABSENCE_TIMEOUT = 30;
+    private static final int LATE_TIMEOUT = 5;
 
     private final String korean;
 
@@ -38,11 +40,11 @@ public enum AttendanceStatus {
 
     private static AttendanceStatus get(LocalTime criterionTime, LocalTime attendanceTime) {
         // TODO 매직넘버 상수화하기
-        if (attendanceTime.isAfter(criterionTime.plusMinutes(30))) {
+        if (attendanceTime.isAfter(criterionTime.plusMinutes(ABSENCE_TIMEOUT))) {
             return ABSENCE;
         }
 
-        if (attendanceTime.isAfter(criterionTime.plusMinutes(5))) {
+        if (attendanceTime.isAfter(criterionTime.plusMinutes(LATE_TIMEOUT))) {
             return LATE;
         }
 
