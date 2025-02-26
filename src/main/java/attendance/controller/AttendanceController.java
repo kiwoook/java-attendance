@@ -8,13 +8,13 @@ import attendance.service.AttendanceService;
 import attendance.service.DateGenerator;
 import attendance.utils.FileReaderUtil;
 import attendance.utils.Option;
-import attendance.utils.RecoveryUtil;
 import attendance.utils.WorkDayChecker;
 import attendance.view.InputViewer;
 import attendance.view.OutputViewer;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class AttendanceController {
 
@@ -31,15 +31,14 @@ public class AttendanceController {
 
         Option option;
         do {
-            option = readOption();
-            chooseOption(option);
-
+            option = executeWithPrintError(this::readOption);
+            Option copyOption = option;
+            executeWithPrintError(() -> chooseOption(copyOption));
         } while (option.equals(Option.QUIT));
     }
 
-
     private Option readOption() {
-        return RecoveryUtil.executeWithRetry(() -> InputViewer.readOption(dateGenerator.generate()));
+        return InputViewer.readOption(dateGenerator.generate());
     }
 
     private void chooseOption(Option option) {
@@ -66,6 +65,7 @@ public class AttendanceController {
         String nickname = InputViewer.readNickname();
         LocalTime attendanceTime = InputViewer.readAttendanceTime();
 
+        attendanceService.validateName(nickname);
         attendanceService.addAttendanceByName(nickname, attendanceTime);
 
         OutputViewer.printAttendance(today, attendanceTime);
@@ -95,6 +95,23 @@ public class AttendanceController {
         List<DangerCrewDto> dangerCrewDtos = attendanceService.getDangerCrews();
 
         OutputViewer.printDangerCrews(dangerCrewDtos);
+    }
+
+    private void executeWithPrintError(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (IllegalArgumentException e) {
+            OutputViewer.printErrorMessage(e);
+        }
+    }
+
+    private <T> T executeWithPrintError(Supplier<T> inputSupplier) {
+        try {
+            return inputSupplier.get();
+        } catch (IllegalArgumentException e) {
+            OutputViewer.printErrorMessage(e);
+            throw e;
+        }
     }
 
 }
