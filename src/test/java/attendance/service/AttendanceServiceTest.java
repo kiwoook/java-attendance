@@ -3,10 +3,14 @@ package attendance.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import attendance.common.Constants;
 import attendance.common.ErrorMessage;
+import attendance.domain.PenaltyStatus;
 import attendance.dto.AttendanceChangeInfoDto;
+import attendance.dto.AttendanceInfoDto;
+import attendance.dto.CrewAttendanceResultDto;
 import attendance.utils.FileReaderUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,9 +41,9 @@ class AttendanceServiceTest {
         assertThatCode(() -> attendanceService.initCrews(getTestCrews())).doesNotThrowAnyException();
     }
 
-    @Nested
     @DisplayName("출석 확인 기능")
-    class addAttendance {
+    @Nested
+    class AddAttendance {
 
         @DisplayName("이름과 등교 시간을 입력받고 출석을 추가한다.")
         @Test
@@ -74,7 +78,7 @@ class AttendanceServiceTest {
 
     @DisplayName("이름 존재 여부")
     @Nested
-    class validName {
+    class ValidName {
         @DisplayName("이름이 존재하는 지 확인한다.")
         @ParameterizedTest
         @ValueSource(strings = {"쿠키", "빙봉", "빙티", "이든"})
@@ -105,9 +109,9 @@ class AttendanceServiceTest {
 
     }
 
-    @Nested
     @DisplayName("출석 수정 기능")
-    class editAttendance {
+    @Nested
+    class EditAttendance {
         @DisplayName("이름, 날짜, 시간을 입력받고 출석을 수정하고 dto를 반환한다.")
         @Test
         void editAttendanceByNameTest1() {
@@ -149,21 +153,40 @@ class AttendanceServiceTest {
         }
     }
 
-    @Nested
     @DisplayName("출석 기록 확인 기능")
-    class crewResult{
+    @Nested
+    class CrewResult {
 
         @DisplayName("이름 입력받아 출석 기록을 반환한다.")
         @Test
         void getAttendanceResultByNameTest() {
             // given
+            String name = "쿠키";
+
             LocalDate today = LocalDate.of(2024, 12, 16);
             attendanceService = new AttendanceService(() -> today);
 
             attendanceService.initCrews(getTestCrews());
 
+            LocalDate date = LocalDate.of(2024, 12, 13);
+            LocalTime time = LocalTime.of(10, 8);
+
+            // when
+            CrewAttendanceResultDto result = attendanceService.getAttendanceResultByName(name);
+
+            assertAll(() -> assertThat(result.attendanceInfoDtos()).containsExactly(new AttendanceInfoDto(date, time)),
+                    () -> assertThat(result.penaltyStatus()).isEqualTo(PenaltyStatus.EXPULSION.getKorean()),
+                    () -> assertThat(result.lateCount()).isEqualTo(1)
+            );
 
         }
     }
+
+    @DisplayName("제적 위험자 확인")
+    @Nested
+    class DangerCrews{
+
+    }
+
 
 }

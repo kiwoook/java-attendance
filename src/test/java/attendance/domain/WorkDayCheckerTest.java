@@ -46,7 +46,7 @@ class WorkDayCheckerTest {
     void test4(int day) {
         LocalDate workDate = LocalDate.of(2024, 12, day);
 
-        assertThatThrownBy(() -> WorkDayChecker.validWorkDay(workDate))
+        assertThatThrownBy(() -> WorkDayChecker.validateWorkDay(workDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.INVALID_ATTENDANCE_DAY.getMessage());
     }
