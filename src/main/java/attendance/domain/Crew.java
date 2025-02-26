@@ -24,7 +24,7 @@ public class Crew {
 
     public Crew(String name) {
         this.name = name;
-        this.attendanceMap = new TreeMap<>();
+        this.attendanceMap = new HashMap<>();
     }
 
     public static Crew of(String name) {
@@ -81,9 +81,9 @@ public class Crew {
         return stats.getPenaltyStatus();
     }
 
-    private Map<LocalDate, Attendance> getAttendanceMapUntilDate(LocalDate localDate) {
-        return attendanceMap.entrySet().stream()
-                .filter(entry -> entry.getKey().isBefore(localDate))
+    private Map<LocalDate, Attendance> getAttendanceMapUntilDate(LocalDate today) {
+        return new TreeMap<>(attendanceMap).entrySet().stream()
+                .filter(entry -> entry.getKey().isBefore(today))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 

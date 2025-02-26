@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class AttendanceStatsTest {
 
-    // List<attendance>와 Today를 받고 Day를 돌린다. Attendance를 하나씩 분리하여 출석,지각,결석을 알 수 있다.
+    // List<attendanceDate>와 Today를 받고 Day를 돌린다. Attendance를 하나씩 분리하여 출석,지각,결석을 알 수 있다.
     // Day가 존재하지 않으면 결석으로 처리한다.
     // 해당 처리된 값을 PenaltyStatus에 주면 PenaltyStatus를 알 수 있다.
 

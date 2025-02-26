@@ -31,7 +31,6 @@ class CrewTest {
     @Test
     void addAttendanceTest() {
         String crewName = "꾹이";
-        LocalDate today = LocalDate.of(2024, 12, 6);
 
         Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -49,7 +48,6 @@ class CrewTest {
     @Test
     void returnErrorByAddAlreadyAttendance() {
         String crewName = "꾹이";
-        LocalDate today = LocalDate.of(2024, 12, 6);
 
         Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -66,7 +64,6 @@ class CrewTest {
     @Test
     void getAttendanceTimeByDateTest() {
         String crewName = "꾹이";
-        LocalDate today = LocalDate.of(2024, 12, 6);
 
         Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -82,7 +79,6 @@ class CrewTest {
     @Test
     void getAttendanceTimeByDateTest2() {
         String crewName = "꾹이";
-        LocalDate today = LocalDate.of(2024, 12, 6);
 
         Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -96,7 +92,6 @@ class CrewTest {
     @Test
     void editAttendanceTest1() {
         String crewName = "꾹이";
-        LocalDate today = LocalDate.of(2024, 12, 6);
 
         Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
@@ -116,7 +111,6 @@ class CrewTest {
     @Test
     void editAttendanceTest2() {
         String crewName = "꾹이";
-        LocalDate today = LocalDate.of(2024, 12, 6);
 
         Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
