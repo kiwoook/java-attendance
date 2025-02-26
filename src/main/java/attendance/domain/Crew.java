@@ -16,7 +16,6 @@ public class Crew {
     private final String name;
     private final Map<LocalDate, Attendance> attendanceMap;
 
-    // 테스트만을 하기 위한 생성자 괜찮을까?
     public Crew(String name, Map<LocalDate, Attendance> attendanceMap) {
         this.name = name;
         this.attendanceMap = attendanceMap;
@@ -48,8 +47,7 @@ public class Crew {
         }
 
         HashMap<LocalDate, Attendance> attendanceHashMap = new HashMap<>(attendanceMap);
-        Attendance editAttendance = attendanceMap.get(attendanceDate)
-                .editTime(editTime);
+        Attendance editAttendance = attendanceMap.get(attendanceDate).editTime(editTime);
         attendanceHashMap.put(attendanceDate, editAttendance);
 
         return new Crew(name, attendanceHashMap);
@@ -61,13 +59,9 @@ public class Crew {
         }
 
         Attendance attendance = attendanceMap.get(attendanceDate);
-        return attendance
-                .getAttendanceTime();
+        return attendance.getAttendanceTime();
     }
 
-    // 해당 메서드로 인해 Crew의 책임이 과도할까?
-    // 필드를 외부로 노출하고 서비스에서 AttendanceStats를 호출해서 처리하는 방법도 있으나
-    // Crew가 Attendance에 도메인을 알고 있으므로 이를 활용한 Stats에 대해 알고 있어도 된다고 생각함.
     public AttendanceStats getAttendanceStatsByDate(LocalDate today) {
         Map<LocalDate, Attendance> collected = getAttendanceMapUntilDate(today);
 
@@ -82,15 +76,12 @@ public class Crew {
     }
 
     private Map<LocalDate, Attendance> getAttendanceMapUntilDate(LocalDate today) {
-        return new TreeMap<>(attendanceMap).entrySet().stream()
-                .filter(entry -> entry.getKey().isBefore(today))
+        return new TreeMap<>(attendanceMap).entrySet().stream().filter(entry -> entry.getKey().isBefore(today))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
     public List<Attendance> getAttendancesSortedByDate() {
-        return attendanceMap.values().stream()
-                .sorted().
-                toList();
+        return attendanceMap.values().stream().sorted().toList();
     }
 
     public String getName() {
@@ -119,9 +110,6 @@ public class Crew {
 
     @Override
     public String toString() {
-        return "Crew{" +
-                "name='" + name + '\'' +
-                ", attendanceMap=" + attendanceMap +
-                '}';
+        return "Crew{" + "name='" + name + '\'' + ", attendanceMap=" + attendanceMap + '}';
     }
 }

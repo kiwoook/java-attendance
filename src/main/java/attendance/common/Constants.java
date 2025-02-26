@@ -1,6 +1,7 @@
 package attendance.common;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public final class Constants {
 
@@ -11,7 +12,6 @@ public final class Constants {
     public static final String TEST_FILE_PATH = "src/test/java/resources/attendances.csv";
     public static final String LINE_SEPARATOR = System.lineSeparator();
     public static final String TIME_FORMAT = "HH:mm";
-
 
     private Constants() {
     }
