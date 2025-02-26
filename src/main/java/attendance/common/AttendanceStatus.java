@@ -26,7 +26,7 @@ public enum AttendanceStatus {
     }
 
     public static AttendanceStatus of(LocalDate attendanceDate, LocalTime attendanceTime) {
-        WorkDayChecker.validWorkDay(attendanceDate);
+        WorkDayChecker.validateWorkDay(attendanceDate);
         validateOpenTime(attendanceTime);
 
         if (attendanceDate.getDayOfWeek() == DayOfWeek.MONDAY) {

@@ -40,7 +40,7 @@ class CrewsTest {
         Crews result = crews.addAttendance(name, localDate, localTime);
 
         // then
-        assertThat(result.getCrewByName(name)).isEqualTo(expect);
+        assertThat(result.getCrew(name)).isEqualTo(expect);
     }
 
     @DisplayName("해당 크루의 출석 시간을 수정한다.")
@@ -63,7 +63,7 @@ class CrewsTest {
         // when
         Crews result = crews.editAttendance(name, localDate, editTime);
 
-        assertThat(result.getCrewByName(name)).isEqualTo(expect);
+        assertThat(result.getCrew(name)).isEqualTo(expect);
     }
 
     @DisplayName("해당 크루의 수정하려는 출석 날짜가 없으면 에러를 반환한다.")
@@ -166,7 +166,7 @@ class CrewsTest {
     // 어떻게 해야 쉽게 테스트할 수 있는 것인가?
     @DisplayName("해당 크루의 제적 위험자를 확인할 수 있다.")
     @Test
-    void getSortedCrewsTest() {
+    void getSortedDangerCrewsTest() {
         // given
 
         List<String> expect = List.of("꾹이", "비타", "듀이", "레오", "몽이");
@@ -188,7 +188,7 @@ class CrewsTest {
         }
 
         // then
-        List<String> result = crews.getSortedCrews(today).stream().map(Crew::getName).toList();
+        List<String> result = crews.getSortedDangerCrews(today).stream().map(Crew::getName).toList();
 
         System.out.println(crews);
 

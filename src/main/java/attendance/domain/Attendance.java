@@ -10,6 +10,10 @@ import java.util.Objects;
 
 public class Attendance implements Comparable<Attendance> {
 
+    // attendanceDate를 객체화해서 운영하는 날짜에 대해 스스로 처리하고자 할려 했지만 취소하였음
+    // 이유 : 운영 시간에 대한 책임 외에는 결국 getter로 꺼내는 동작 밖에 없음 -> 복잡도 증가
+    // 운영하는 날짜인가를 묻는 행위를 위해서 객체 생성을 별도로 필요하거나 static을 사용함
+    // -> 그럼 그냥 util에서 사용하는게 낫다고 판단
     private final LocalDate attendanceDate;
     private final LocalTime attendanceTime;
 
@@ -25,7 +29,8 @@ public class Attendance implements Comparable<Attendance> {
     }
 
     private static void validateOpenDay(LocalDate attendanceDate) {
-        WorkDayChecker.validWorkDay(attendanceDate);
+        // 유틸 클래스에 의존하지만 내부 구현으로 숨겼으므로 상관이 없지 않을까?
+        WorkDayChecker.validateWorkDay(attendanceDate);
     }
 
     private static void validateOpenTime(LocalTime attendanceTime) {

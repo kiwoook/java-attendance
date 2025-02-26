@@ -3,6 +3,7 @@ package attendance.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
@@ -142,8 +143,11 @@ class CrewTest {
             crew = crew.addAttendance(localDate, localTime);
         }
 
-        assertThat(crew.getAttendanceStatsCountByDate(today)).isEqualTo(List.of(0, 0, 6));
-
+        AttendanceStats attendanceStats = crew.getAttendanceStatsByDate(today);
+        assertAll(() -> assertThat(attendanceStats.getPresenceCount()).isZero(),
+                () -> assertThat(attendanceStats.getLateCount()).isZero(),
+                () -> assertThat(attendanceStats.getAbsenceCount()).isEqualTo(6)
+        );
     }
 
     @DisplayName("기준 날짜를 받아와 PenaltyStatus를 반환한다.")

@@ -4,7 +4,6 @@ import attendance.common.AttendanceStatus;
 import attendance.common.Constants;
 import attendance.utils.WorkDayChecker;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 public class AttendanceStats {
@@ -70,10 +69,5 @@ public class AttendanceStats {
 
     public Integer priorityCount() {
         return getLateCount() + getAbsenceCount() * 3;
-    }
-
-    public List<Integer> getCounts() {
-        return counts.values().stream()
-                .toList();
     }
 }

@@ -27,13 +27,21 @@ public class Crews {
     public Crews addAttendance(String name, LocalDate attendanceDate, LocalTime attendanceTime) {
         HashMap<String, Crew> crewHashMap = new HashMap<>(crewMap);
 
-        Crew crew = getCrewByName(name);
+        Crew crew = getOrCreateCrew(name);
         crewHashMap.put(name, crew.addAttendance(attendanceDate, attendanceTime));
 
         return new Crews(crewHashMap);
     }
 
-    public Crew getCrewByName(String name) {
+    public Crew getCrew(String name) {
+        if (!crewMap.containsKey(name)) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_CREW.getMessage());
+        }
+
+        return crewMap.get(name);
+    }
+
+    private Crew getOrCreateCrew(String name) {
         if (!crewMap.containsKey(name)) {
             return Crew.of(name);
         }
@@ -59,27 +67,37 @@ public class Crews {
         }
     }
 
+    // 아래 메서드들은 검증하고 크루를 찾은 이후 반환하는 역할밖에 안함
+    // 그렇다면 그냥 crew를 반환하는게 효율적인게 아닐까라는 의문이 들었음
+    // 해당 메서드들을 사용하지 않는 쪽으로 틀었음
     public LocalTime getAttendanceTimeByNameAndDate(String name, LocalDate localDate) {
         validateName(name);
 
-        return getCrewByName(name)
+        return getCrew(name)
                 .getAttendanceTimeByDate(localDate);
     }
 
-    // sorted를 재정의해서 넘겨주자
-    public List<Crew> getSortedCrews(LocalDate today) {
+    public List<Attendance> getSortedAttendancesByName(String name) {
+        validateName(name);
+        return getCrew(name).getAttendancesSortedByDate();
+    }
+
+    public AttendanceStats getAttendanceStatsByNameAndDate(String name, LocalDate today) {
+        validateName(name);
+
+        return getCrew(name).getAttendanceStatsByDate(today);
+    }
+
+    public List<Crew> getSortedDangerCrews(LocalDate today) {
         return crewMap.values().stream()
                 .sorted(
                         Comparator.comparing((Crew c) -> c.getPenaltyStatusByDate(today))
                                 .thenComparing((Crew c) -> c.getPriorityCount(today), Comparator.reverseOrder())
                                 .thenComparing(Crew::getName)
-                ).toList();
+                ).filter(crew -> !crew.getPenaltyStatusByDate(today).equals(PenaltyStatus.NONE))
+                .toList();
     }
 
-    public List<Attendance> getSortedAttendancesByName(String name) {
-        validateName(name);
-        return getCrewByName(name).getAttendancesSortedByDate();
-    }
 
     @Override
     public String toString() {
