@@ -13,6 +13,9 @@ import attendance.dto.DangerCrewDto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class AttendanceService {
 
@@ -67,14 +70,15 @@ public class AttendanceService {
     public CrewAttendanceResultDto getAttendanceResultByName(String name) {
         Crew crew = crews.getCrew(name);
 
-        List<AttendanceInfoDto> attendanceInfoDtos = crew.getAttendancesSortedByDate().stream()
-                .map(AttendanceInfoDto::from).toList();
+        Map<LocalDate, AttendanceInfoDto> attendanceInfoMap = crew.getAttendancesSortedByDate().stream()
+                .map(AttendanceInfoDto::from)
+                .collect(Collectors.toMap(AttendanceInfoDto::attendanceDate, Function.identity()));
 
         LocalDate today = dateGenerator.generate();
         AttendanceStats attendanceStats = crew.getAttendanceStatsByDate(today);
         PenaltyStatus penaltyStatus = crew.getPenaltyStatusByDate(today);
 
-        return CrewAttendanceResultDto.of(attendanceInfoDtos, attendanceStats, penaltyStatus);
+        return CrewAttendanceResultDto.of(attendanceInfoMap, attendanceStats, penaltyStatus);
     }
 
     public List<DangerCrewDto> getDangerCrews() {

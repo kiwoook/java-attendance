@@ -2,16 +2,18 @@ package attendance.dto;
 
 import attendance.domain.AttendanceStats;
 import attendance.domain.PenaltyStatus;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Map;
 
-public record CrewAttendanceResultDto(List<AttendanceInfoDto> attendanceInfoDtos, int presenceCount, int lateCount,
+public record CrewAttendanceResultDto(Map<LocalDate, AttendanceInfoDto> attendanceInfoMap, int presenceCount,
+                                      int lateCount,
                                       int absenceCount, String penaltyStatus) {
 
-    public static CrewAttendanceResultDto of(List<AttendanceInfoDto> attendanceInfoDtos,
+    public static CrewAttendanceResultDto of(Map<LocalDate, AttendanceInfoDto> attendanceInfoMap,
                                              AttendanceStats attendanceStats,
                                              PenaltyStatus penaltyStatus) {
 
-        return new CrewAttendanceResultDto(attendanceInfoDtos,
+        return new CrewAttendanceResultDto(attendanceInfoMap,
                 attendanceStats.getPresenceCount(),
                 attendanceStats.getLateCount(),
                 attendanceStats.getAbsenceCount(),

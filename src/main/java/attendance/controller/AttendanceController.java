@@ -2,6 +2,8 @@ package attendance.controller;
 
 import attendance.common.Constants;
 import attendance.dto.AttendanceChangeInfoDto;
+import attendance.dto.CrewAttendanceResultDto;
+import attendance.dto.DangerCrewDto;
 import attendance.service.AttendanceService;
 import attendance.service.DateGenerator;
 import attendance.utils.FileReaderUtil;
@@ -12,6 +14,7 @@ import attendance.view.InputViewer;
 import attendance.view.OutputViewer;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class AttendanceController {
 
@@ -23,10 +26,8 @@ public class AttendanceController {
         this.dateGenerator = dateGenerator;
     }
 
-    // 입력 중 오류가 생기면 옵션 설정으로 돌아갈 수 있도록 해야함
-
     public void run() {
-        attendanceService.initCrews(FileReaderUtil.readFile(Constants.TEST_FILE_PATH));
+        attendanceService.initCrews(FileReaderUtil.readFile(Constants.FILE_PATH));
 
         Option option;
         do {
@@ -60,11 +61,14 @@ public class AttendanceController {
     }
 
     private void optionOne() {
-        WorkDayChecker.validateWorkDay(dateGenerator.generate());
+        LocalDate today = dateGenerator.generate();
+        WorkDayChecker.validateWorkDay(today);
         String nickname = InputViewer.readNickname();
         LocalTime attendanceTime = InputViewer.readAttendanceTime();
 
         attendanceService.addAttendanceByName(nickname, attendanceTime);
+
+        OutputViewer.printAttendance(today, attendanceTime);
     }
 
     private void optionTwo() {
@@ -80,11 +84,17 @@ public class AttendanceController {
     }
 
     private void optionThree() {
-        
+        String nickname = InputViewer.readNickname();
+
+        CrewAttendanceResultDto result = attendanceService.getAttendanceResultByName(nickname);
+
+        OutputViewer.printAttendanceResultByCrew(nickname, result, dateGenerator.generate());
     }
 
     private void optionFour() {
+        List<DangerCrewDto> dangerCrewDtos = attendanceService.getDangerCrews();
 
+        OutputViewer.printDangerCrews(dangerCrewDtos);
     }
 
 }
