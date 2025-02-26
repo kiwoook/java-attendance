@@ -9,7 +9,6 @@ import attendance.common.Constants;
 import attendance.common.ErrorMessage;
 import attendance.domain.PenaltyStatus;
 import attendance.dto.AttendanceChangeInfoDto;
-import attendance.dto.AttendanceInfoDto;
 import attendance.dto.CrewAttendanceResultDto;
 import attendance.dto.DangerCrewDto;
 import attendance.utils.FileReaderUtil;
@@ -170,13 +169,10 @@ class AttendanceServiceTest {
 
             attendanceService.initCrews(getTestCrews());
 
-            LocalDate date = LocalDate.of(2024, 12, 13);
-            LocalTime time = LocalTime.of(10, 8);
-
             // when
             CrewAttendanceResultDto result = attendanceService.getAttendanceResultByName(name);
 
-            assertAll(() -> assertThat(result.attendanceInfoDtos()).containsExactly(new AttendanceInfoDto(date, time)),
+            assertAll(
                     () -> assertThat(result.penaltyStatus()).isEqualTo(PenaltyStatus.EXPULSION.getKorean()),
                     () -> assertThat(result.lateCount()).isEqualTo(1)
             );

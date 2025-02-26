@@ -1,6 +1,5 @@
 package attendance.common;
 
-import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_TIME;
 
 import attendance.utils.WorkDayChecker;
 import java.time.DayOfWeek;
@@ -10,14 +9,15 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public enum AttendanceStatus {
-    // TODO 비즈니스 로직이 존재하지 않으므로 common 패키지에 존재해도 괜찮다 생각
 
     PRESENCE("출석"),
     LATE("지각"),
     ABSENCE("결석");
 
-    private static final LocalTime MONDAY_OPEN_TIME = LocalTime.of(13, 0);
-    private static final LocalTime WEEKDAY_OPEN_TIME = LocalTime.of(10, 0);
+    private static final LocalTime MONDAY_START_TIME = LocalTime.of(13, 0);
+    private static final LocalTime WEEKDAY_START_TIME = LocalTime.of(10, 0);
+
+
     private static final int ABSENCE_TIMEOUT = 30;
     private static final int LATE_TIMEOUT = 5;
 
@@ -29,17 +29,15 @@ public enum AttendanceStatus {
 
     public static AttendanceStatus of(LocalDate attendanceDate, LocalTime attendanceTime) {
         WorkDayChecker.validateWorkDay(attendanceDate);
-        validateOpenTime(attendanceTime);
 
         if (attendanceDate.getDayOfWeek() == DayOfWeek.MONDAY) {
-            return get(MONDAY_OPEN_TIME, attendanceTime);
+            return get(MONDAY_START_TIME, attendanceTime);
         }
 
-        return get(WEEKDAY_OPEN_TIME, attendanceTime);
+        return get(WEEKDAY_START_TIME, attendanceTime);
     }
 
     private static AttendanceStatus get(LocalTime criterionTime, LocalTime attendanceTime) {
-        // TODO 매직넘버 상수화하기
         if (attendanceTime.isAfter(criterionTime.plusMinutes(ABSENCE_TIMEOUT))) {
             return ABSENCE;
         }
@@ -49,12 +47,6 @@ public enum AttendanceStatus {
         }
 
         return PRESENCE;
-    }
-
-    private static void validateOpenTime(LocalTime attendanceTime) {
-        if (attendanceTime.isAfter(LocalTime.of(23, 0)) || attendanceTime.isBefore(LocalTime.of(8, 0))) {
-            throw new IllegalArgumentException(INVALID_ATTENDANCE_TIME.getMessage());
-        }
     }
 
     public static Map<AttendanceStatus, Integer> initCountsMap() {

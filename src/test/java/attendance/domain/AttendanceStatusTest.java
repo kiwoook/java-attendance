@@ -41,13 +41,6 @@ class AttendanceStatusTest {
         );
     }
 
-    static Stream<LocalTime> invalidOpenTime() {
-        return Stream.of(
-                LocalTime.of(7, 59),
-                LocalTime.of(23, 1)
-        );
-    }
-
     @BeforeEach
     void init() {
         presenceTime = LocalTime.of(10, 0);
@@ -128,17 +121,5 @@ class AttendanceStatusTest {
 
         assertThat(AttendanceStatus.of(thursday, time)).isEqualTo(AttendanceStatus.ABSENCE);
     }
-
-    @DisplayName("운영 시간이 아니라면 예외를 발생한다.")
-    @ParameterizedTest
-    @MethodSource("invalidOpenTime")
-    void invalidateOpenTime(LocalTime time) {
-        LocalDate thursday = LocalDate.of(2024, 12, 17);
-
-        assertThatThrownBy(() -> AttendanceStatus.of(thursday, time))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ErrorMessage.INVALID_ATTENDANCE_TIME.getMessage());
-    }
-
 
 }
