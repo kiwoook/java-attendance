@@ -67,27 +67,6 @@ public class Crews {
         }
     }
 
-    // 아래 메서드들은 검증하고 크루를 찾은 이후 반환하는 역할밖에 안함
-    // 그렇다면 그냥 crew를 반환하는게 효율적인게 아닐까라는 의문이 들었음
-    // 해당 메서드들을 사용하지 않는 쪽으로 틀었음
-    public LocalTime getAttendanceTimeByNameAndDate(String name, LocalDate localDate) {
-        validateName(name);
-
-        return getCrew(name)
-                .getAttendanceTimeByDate(localDate);
-    }
-
-    public List<Attendance> getSortedAttendancesByName(String name) {
-        validateName(name);
-        return getCrew(name).getAttendancesSortedByDate();
-    }
-
-    public AttendanceStats getAttendanceStatsByNameAndDate(String name, LocalDate today) {
-        validateName(name);
-
-        return getCrew(name).getAttendanceStatsByDate(today);
-    }
-
     public List<Crew> getSortedDangerCrews(LocalDate today) {
         return crewMap.values().stream()
                 .sorted(
