@@ -16,9 +16,6 @@ import org.junit.jupiter.api.Test;
 
 class CrewTest {
 
-    // 특정 날짜(today)를 기준으로 시작날짜부터 전날까지의 List를 받아와야 한다.
-    // 해당 Map을 정렬해야 하며, AttendanceStatus, PenaltyStatus를 알 수 있다.
-
     @DisplayName("이름으로 객체를 생성한다.")
     @Test
     void test1() {

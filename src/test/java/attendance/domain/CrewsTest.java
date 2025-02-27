@@ -16,7 +16,6 @@ class CrewsTest {
     @DisplayName("객체를 생성한다.")
     @Test
     void test1() {
-        LocalDate now = LocalDate.of(2024, 12, 16);
         assertThatCode(Crews::create).doesNotThrowAnyException();
 
     }
@@ -25,13 +24,10 @@ class CrewsTest {
     @Test
     void addAttendanceTest1() {
         // given
-        LocalDate now = LocalDate.of(2024, 12, 16);
-
         Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
-        LocalDate today = localDate.plusDays(1);
         LocalTime localTime = LocalTime.of(10, 0);
 
         Crew expect = Crew.of(name).addAttendance(localDate, localTime);
@@ -47,13 +43,11 @@ class CrewsTest {
     @Test
     void editAttendanceTest1() {
         // given
-        LocalDate now = LocalDate.of(2024, 12, 16);
 
         Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
-        LocalDate today = localDate.plusDays(1);
         LocalTime localTime = LocalTime.of(10, 0);
         LocalTime editTime = LocalTime.of(11, 0);
 
@@ -69,7 +63,6 @@ class CrewsTest {
     @DisplayName("해당 크루의 수정하려는 출석 날짜가 없으면 에러를 반환한다.")
     @Test
     void editAttendanceTest2() {
-        LocalDate now = LocalDate.of(2024, 12, 16);
         String name = "꾹이";
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime editTime = LocalTime.of(11, 0);
@@ -84,7 +77,6 @@ class CrewsTest {
     @Test
     void validateNameTest1() {
         // given
-        LocalDate now = LocalDate.of(2024, 12, 16);
 
         Crews crews = Crews.create();
         String name = "꾹이";
@@ -104,7 +96,6 @@ class CrewsTest {
     @Test
     void validateNameTest2() {
         // given
-        LocalDate now = LocalDate.of(2024, 12, 16);
         String name = "꾹이";
         Crews crews = Crews.create();
 
