@@ -29,7 +29,7 @@ class AttendanceServiceTest {
 
     @BeforeEach
     void init() {
-        attendanceService = new AttendanceService(new FakeDateGeneratorImpl());
+        attendanceService = new AttendanceService(new FakeDateGeneratorImpl(), getTestCrews());
     }
 
     private List<String> getTestCrews() {
@@ -39,7 +39,8 @@ class AttendanceServiceTest {
     @DisplayName("파일을 crews 객체에 저장한다.")
     @Test
     void initCrewsTest() {
-        assertThatCode(() -> attendanceService.initCrews(getTestCrews())).doesNotThrowAnyException();
+        assertThatCode(
+                () -> new AttendanceService(new FakeDateGeneratorImpl(), getTestCrews())).doesNotThrowAnyException();
     }
 
     @DisplayName("출석 확인 기능")
@@ -50,7 +51,7 @@ class AttendanceServiceTest {
         @Test
         void addAttendanceByNameTest1() {
             LocalDate today = LocalDate.of(2024, 12, 16);
-            attendanceService = new AttendanceService(() -> today);
+            attendanceService = new AttendanceService(() -> today, getTestCrews());
 
             String name = "쿠키";
             LocalTime localTime = LocalTime.of(10, 8);
@@ -63,12 +64,10 @@ class AttendanceServiceTest {
         void addAttendanceByNameTest2() {
             // given
             LocalDate today = LocalDate.of(2024, 12, 13);
-            attendanceService = new AttendanceService(() -> today);
+            attendanceService = new AttendanceService(() -> today, getTestCrews());
 
             String name = "쿠키";
             LocalTime localTime = LocalTime.of(10, 8);
-
-            attendanceService.initCrews(getTestCrews());
 
             // when
             assertThatThrownBy(() -> attendanceService.addAttendanceByName(name, localTime))
@@ -86,9 +85,7 @@ class AttendanceServiceTest {
         void validateNameTest1(String name) {
             // given
             LocalDate today = LocalDate.of(2024, 12, 16);
-            attendanceService = new AttendanceService(() -> today);
-
-            attendanceService.initCrews(getTestCrews());
+            attendanceService = new AttendanceService(() -> today, getTestCrews());
 
             // when & then
             assertThatCode(() -> attendanceService.validateName(name)).doesNotThrowAnyException();
@@ -99,7 +96,7 @@ class AttendanceServiceTest {
         @Test
         void validateNameTest2() {
             LocalDate today = LocalDate.of(2024, 12, 16);
-            attendanceService = new AttendanceService(() -> today);
+            attendanceService = new AttendanceService(() -> today, getTestCrews());
 
             String name = "꾹이";
 
@@ -118,15 +115,13 @@ class AttendanceServiceTest {
         void editAttendanceByNameTest1() {
             // given
             LocalDate today = LocalDate.of(2024, 12, 16);
-            attendanceService = new AttendanceService(() -> today);
+            attendanceService = new AttendanceService(() -> today, getTestCrews());
 
             String name = "쿠키";
             LocalTime previousTime = LocalTime.of(10, 8);
             LocalDate editDate = LocalDate.of(2024, 12, 13);
             LocalTime editTime = LocalTime.of(10, 32);
             AttendanceChangeInfoDto expect = new AttendanceChangeInfoDto(editDate, previousTime, editTime);
-
-            attendanceService.initCrews(getTestCrews());
 
             // when
             AttendanceChangeInfoDto result = attendanceService.editAttendanceByName(name, editDate, editTime);
@@ -140,13 +135,11 @@ class AttendanceServiceTest {
         void editAttendanceByNameTest2() {
             // given
             LocalDate today = LocalDate.of(2024, 12, 16);
-            attendanceService = new AttendanceService(() -> today);
+            attendanceService = new AttendanceService(() -> today, getTestCrews());
 
             String name = "쿠키";
             LocalDate wrongDate = LocalDate.of(2024, 12, 16);
             LocalTime editTime = LocalTime.of(10, 32);
-
-            attendanceService.initCrews(getTestCrews());
 
             // when & then
             assertThatThrownBy(() -> attendanceService.editAttendanceByName(name, wrongDate, editTime)).isInstanceOf(
@@ -165,9 +158,7 @@ class AttendanceServiceTest {
             String name = "쿠키";
 
             LocalDate today = LocalDate.of(2024, 12, 16);
-            attendanceService = new AttendanceService(() -> today);
-
-            attendanceService.initCrews(getTestCrews());
+            attendanceService = new AttendanceService(() -> today, getTestCrews());
 
             // when
             CrewAttendanceResultDto result = attendanceService.getAttendanceResultByName(name);
@@ -189,13 +180,11 @@ class AttendanceServiceTest {
         void getDangerCrews() {
             // given
             LocalDate today = LocalDate.of(2024, 12, 16);
-            attendanceService = new AttendanceService(() -> today);
+            attendanceService = new AttendanceService(() -> today, getTestCrews());
 
             List<String> expectNameList = Stream.of("쿠키", "빙봉", "빙티", "이든")
                     .sorted()
                     .toList();
-
-            attendanceService.initCrews(getTestCrews());
 
             // when
             List<DangerCrewDto> result = attendanceService.getDangerCrews();

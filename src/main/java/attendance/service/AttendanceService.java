@@ -22,12 +22,13 @@ public class AttendanceService {
     private final DateGenerator dateGenerator;
     private Crews crews;
 
-    public AttendanceService(DateGenerator dateGenerator) {
+    public AttendanceService(DateGenerator dateGenerator, List<String> attendanceInfoList) {
         this.dateGenerator = dateGenerator;
         this.crews = Crews.create();
+        initCrews(attendanceInfoList);
     }
 
-    public void initCrews(List<String> attendanceInfoList) {
+    private void initCrews(List<String> attendanceInfoList) {
         List<CrewCreateDto> crewCreateDtos = attendanceInfoList.stream()
                 .map(CrewCreateDtoConverter::convert)
                 .toList();

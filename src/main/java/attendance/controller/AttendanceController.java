@@ -27,7 +27,6 @@ public class AttendanceController {
     }
 
     public void run() {
-        attendanceService.initCrews(FileReaderUtil.readFile(Constants.FILE_PATH));
 
         Option option;
         do {
