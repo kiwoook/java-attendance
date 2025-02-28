@@ -16,7 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class AttendanceStatusTest {
+class AttendancePolicyTest {
 
     private LocalTime presenceTime;
 
@@ -51,7 +51,7 @@ class AttendanceStatusTest {
     void test1() {
         LocalDate localDate = LocalDate.of(2024, 12, 16);
 
-        assertThatCode(() -> AttendanceStatus.of(localDate, presenceTime))
+        assertThatCode(() -> AttendancePolicy.determineStatus(localDate, presenceTime))
                 .doesNotThrowAnyException();
     }
 
@@ -61,7 +61,7 @@ class AttendanceStatusTest {
     void errorByWeekendAndHoliday(int day) {
         LocalDate localDate = LocalDate.of(2024, 12, day);
 
-        assertThatThrownBy(() -> AttendanceStatus.of(localDate, presenceTime))
+        assertThatThrownBy(() -> AttendancePolicy.determineStatus(localDate, presenceTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.INVALID_ATTENDANCE_DAY.getMessage());
     }
@@ -72,7 +72,7 @@ class AttendanceStatusTest {
         LocalDate localDate = LocalDate.of(2024, 12, 16);
         presenceTime = LocalTime.of(13, 0);
 
-        assertThat(AttendanceStatus.of(localDate, presenceTime)).isEqualTo(AttendanceStatus.PRESENCE);
+        assertThat(AttendancePolicy.determineStatus(localDate, presenceTime)).isEqualTo(AttendanceStatus.PRESENCE);
     }
 
     @ParameterizedTest
@@ -82,7 +82,7 @@ class AttendanceStatusTest {
         LocalDate localDate = LocalDate.of(2024, 12, day);
         LocalTime absenceTime = LocalTime.of(13, 0);
 
-        assertThat(AttendanceStatus.of(localDate, absenceTime)).isEqualTo(AttendanceStatus.ABSENCE);
+        assertThat(AttendancePolicy.determineStatus(localDate, absenceTime)).isEqualTo(AttendanceStatus.ABSENCE);
     }
 
     @ParameterizedTest
@@ -92,7 +92,7 @@ class AttendanceStatusTest {
         LocalDate localDate = LocalDate.of(2024, 12, day);
         presenceTime = LocalTime.of(10, 0);
 
-        assertThat(AttendanceStatus.of(localDate, presenceTime)).isEqualTo(AttendanceStatus.PRESENCE);
+        assertThat(AttendancePolicy.determineStatus(localDate, presenceTime)).isEqualTo(AttendanceStatus.PRESENCE);
     }
 
     @DisplayName("시작시간 + 5분 전은 정상 출석이다.")
@@ -101,7 +101,7 @@ class AttendanceStatusTest {
     void testPresence(LocalTime time) {
         LocalDate thursday = LocalDate.of(2024, 12, 17);
 
-        assertThat(AttendanceStatus.of(thursday, time)).isEqualTo(AttendanceStatus.PRESENCE);
+        assertThat(AttendancePolicy.determineStatus(thursday, time)).isEqualTo(AttendanceStatus.PRESENCE);
     }
 
     @DisplayName("시작 시간을 5분 초과하고 30분 전이라면 지각이다.")
@@ -110,7 +110,7 @@ class AttendanceStatusTest {
     void testLate(LocalTime time) {
         LocalDate thursday = LocalDate.of(2024, 12, 17);
 
-        assertThat(AttendanceStatus.of(thursday, time)).isEqualTo(AttendanceStatus.LATE);
+        assertThat(AttendancePolicy.determineStatus(thursday, time)).isEqualTo(AttendanceStatus.LATE);
     }
 
     @DisplayName("시작 시간 30분 초과 시 결석이다.")
@@ -119,7 +119,7 @@ class AttendanceStatusTest {
     void testAbsence(LocalTime time) {
         LocalDate thursday = LocalDate.of(2024, 12, 17);
 
-        assertThat(AttendanceStatus.of(thursday, time)).isEqualTo(AttendanceStatus.ABSENCE);
+        assertThat(AttendancePolicy.determineStatus(thursday, time)).isEqualTo(AttendanceStatus.ABSENCE);
     }
 
 }

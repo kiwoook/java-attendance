@@ -48,7 +48,7 @@ public class Attendance implements Comparable<Attendance> {
     }
 
     public AttendanceStatus getStatus() {
-        return AttendanceStatus.of(attendanceDate, attendanceTime);
+        return AttendancePolicy.determineStatus(attendanceDate, attendanceTime);
     }
 
     @Override

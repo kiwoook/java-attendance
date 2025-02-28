@@ -84,12 +84,4 @@ public class AttendanceService {
                 ))
                 .toList();
     }
-
-    @Override
-    public String toString() {
-        return "AttendanceService{" +
-                "dateGenerator=" + dateGenerator +
-                ", crews=" + crews +
-                '}';
-    }
 }
