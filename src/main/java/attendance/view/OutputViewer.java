@@ -98,7 +98,7 @@ public class OutputViewer {
     }
 
     private static String toAttendanceMessage(LocalDate attendanceDate, LocalTime attendanceTime) {
-        String korean = AttendanceStatus.of(attendanceDate, attendanceTime).getKorean();
+        String korean = AttendanceStatus.of(attendanceDate, attendanceTime).getDescription();
 
         return DateTimeUtil.formatLocalTime(attendanceTime) + " (" + korean + ")";
     }

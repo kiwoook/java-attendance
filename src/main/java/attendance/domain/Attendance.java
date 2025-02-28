@@ -3,7 +3,6 @@ package attendance.domain;
 import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_TIME;
 
 import attendance.common.AttendanceStatus;
-import attendance.utils.WorkDayChecker;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -13,22 +12,17 @@ public class Attendance implements Comparable<Attendance> {
     private static final LocalTime CLOSED_TIME = LocalTime.of(23, 0);
     private static final LocalTime OPEN_TIME = LocalTime.of(8, 0);
 
-    private final LocalDate attendanceDate;
+    private final OpenDate attendanceDate;
     private final LocalTime attendanceTime;
 
-    public Attendance(LocalDate attendanceDate, LocalTime attendanceTime) {
-        validateOpenDay(attendanceDate);
+    public Attendance(OpenDate attendanceDate, LocalTime attendanceTime) {
         validateOpenTime(attendanceTime);
         this.attendanceDate = attendanceDate;
         this.attendanceTime = attendanceTime;
     }
 
-    public static Attendance of(LocalDate attendanceDate, LocalTime attendanceTime) {
+    public static Attendance of(OpenDate attendanceDate, LocalTime attendanceTime) {
         return new Attendance(attendanceDate, attendanceTime);
-    }
-
-    private static void validateOpenDay(LocalDate attendanceDate) {
-        WorkDayChecker.validateWorkDay(attendanceDate);
     }
 
     private static void validateOpenTime(LocalTime attendanceTime) {
@@ -42,7 +36,7 @@ public class Attendance implements Comparable<Attendance> {
     }
 
     public LocalDate getAttendanceDate() {
-        return attendanceDate;
+        return attendanceDate.getOpenDate();
     }
 
     public LocalTime getAttendanceTime() {
@@ -50,7 +44,7 @@ public class Attendance implements Comparable<Attendance> {
     }
 
     public AttendanceStatus getStatus() {
-        return AttendanceStatus.of(attendanceDate, attendanceTime);
+        return AttendanceStatus.of(attendanceDate.getOpenDate(), attendanceTime);
     }
 
     @Override
@@ -78,6 +72,6 @@ public class Attendance implements Comparable<Attendance> {
 
     @Override
     public int compareTo(Attendance o) {
-        return this.attendanceDate.compareTo(o.attendanceDate);
+        return this.attendanceDate.getOpenDate().compareTo(o.attendanceDate.getOpenDate());
     }
 }

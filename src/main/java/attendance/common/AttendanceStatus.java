@@ -16,15 +16,13 @@ public enum AttendanceStatus {
 
     private static final LocalTime MONDAY_START_TIME = LocalTime.of(13, 0);
     private static final LocalTime WEEKDAY_START_TIME = LocalTime.of(10, 0);
-
-
     private static final int ABSENCE_TIMEOUT = 30;
     private static final int LATE_TIMEOUT = 5;
 
-    private final String korean;
+    private final String description;
 
-    AttendanceStatus(String korean) {
-        this.korean = korean;
+    AttendanceStatus(String description) {
+        this.description = description;
     }
 
     public static AttendanceStatus of(LocalDate attendanceDate, LocalTime attendanceTime) {
@@ -58,7 +56,7 @@ public enum AttendanceStatus {
         return map;
     }
 
-    public String getKorean() {
-        return korean;
+    public String getDescription() {
+        return description;
     }
 }

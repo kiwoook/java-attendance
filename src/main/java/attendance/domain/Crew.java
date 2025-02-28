@@ -36,7 +36,8 @@ public class Crew {
         }
 
         HashMap<LocalDate, Attendance> attendanceHashMap = new HashMap<>(attendanceMap);
-        attendanceHashMap.put(attendanceDate, Attendance.of(attendanceDate, attendanceTime));
+        OpenDate openDate = OpenDate.of(attendanceDate);
+        attendanceHashMap.put(attendanceDate, Attendance.of(openDate, attendanceTime));
 
         return new Crew(name, attendanceHashMap);
     }

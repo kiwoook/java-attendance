@@ -34,7 +34,7 @@ class CrewTest {
         LocalTime localTime = LocalTime.of(10, 0);
         Map<LocalDate, Attendance> map = new HashMap<>();
 
-        Attendance attendance = new Attendance(localDate, localTime);
+        Attendance attendance = new Attendance(OpenDate.of(localDate), localTime);
         map.put(localDate, attendance);
         Crew expect = new Crew(crewName, map);
 
@@ -97,7 +97,7 @@ class CrewTest {
 
         Map<LocalDate, Attendance> map = new HashMap<>();
 
-        Attendance attendance = new Attendance(localDate, localTime);
+        Attendance attendance = new Attendance(OpenDate.of(localDate), localTime);
         map.put(localDate, attendance);
         Crew expect = new Crew(crewName, map);
 
@@ -173,7 +173,7 @@ class CrewTest {
                 LocalDate.of(2024, 12, 18)
         );
 
-        List<Attendance> expected = dates.stream().sorted().map(date -> new Attendance(date, LocalTime.of(10, 0)))
+        List<Attendance> expected = dates.stream().sorted().map(date -> new Attendance(OpenDate.of(date), LocalTime.of(10, 0)))
                 .toList();
 
         crew = dates.stream()

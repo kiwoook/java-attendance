@@ -1,12 +1,10 @@
 package attendance.controller;
 
-import attendance.common.Constants;
 import attendance.dto.AttendanceChangeInfoDto;
 import attendance.dto.CrewAttendanceResultDto;
 import attendance.dto.DangerCrewDto;
 import attendance.service.AttendanceService;
 import attendance.service.DateGenerator;
-import attendance.utils.FileReaderUtil;
 import attendance.utils.Option;
 import attendance.utils.WorkDayChecker;
 import attendance.view.InputViewer;
@@ -60,11 +58,13 @@ public class AttendanceController {
 
     private void optionOne() {
         LocalDate today = dateGenerator.generate();
+        // 우발적 중복
         WorkDayChecker.validateWorkDay(today);
-        String nickname = InputViewer.readNickname();
-        LocalTime attendanceTime = InputViewer.readAttendanceTime();
 
+        String nickname = InputViewer.readNickname();
         attendanceService.validateName(nickname);
+
+        LocalTime attendanceTime = InputViewer.readAttendanceTime();
         attendanceService.addAttendanceByName(nickname, attendanceTime);
 
         OutputViewer.printAttendance(today, attendanceTime);

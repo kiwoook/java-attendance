@@ -20,20 +20,8 @@ class AttendanceTest {
         LocalDate localDate = LocalDate.of(2024, 12, 16);
         LocalTime localTime = LocalTime.of(10, 0);
 
-        assertThatCode(() -> new Attendance(localDate, localTime))
+        assertThatCode(() -> new Attendance(OpenDate.of(localDate), localTime))
                 .doesNotThrowAnyException();
-    }
-
-    @DisplayName("운영하지 않는 날짜에 대한 생성은 에러가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(ints = {14, 15, 25})
-    void test2(int day) {
-        LocalDate notOpenDay = LocalDate.of(2024, 12, day);
-        LocalTime localTime = LocalTime.of(10, 0);
-
-        assertThatCode(() -> new Attendance(notOpenDay, localTime))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ErrorMessage.INVALID_ATTENDANCE_DAY.getMessage());
     }
 
     @DisplayName("출석 시간을 수정할 수 있다.")
@@ -41,10 +29,11 @@ class AttendanceTest {
     void test5() {
         LocalDate localDate = LocalDate.of(2024, 12, 16);
         LocalTime localTime = LocalTime.of(10, 0);
-        Attendance attendance = new Attendance(localDate, localTime);
+        OpenDate openDate = OpenDate.of(localDate);
+        Attendance attendance = new Attendance(openDate, localTime);
 
         LocalTime editTime = LocalTime.of(11, 0);
-        Attendance expect = new Attendance(localDate, editTime);
+        Attendance expect = new Attendance(openDate, editTime);
 
         assertThat(attendance.editTime(editTime)).isEqualTo(expect);
     }
@@ -54,7 +43,7 @@ class AttendanceTest {
     void test6() {
         LocalDate localDate = LocalDate.of(2024, 12, 16);
         LocalTime localTime = LocalTime.of(10, 0);
-        Attendance attendance = new Attendance(localDate, localTime);
+        Attendance attendance = new Attendance(OpenDate.of(localDate), localTime);
 
         assertThat(attendance.getStatus()).isEqualTo(AttendanceStatus.PRESENCE);
     }

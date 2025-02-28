@@ -1,7 +1,6 @@
 package attendance.common;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public final class Constants {
 

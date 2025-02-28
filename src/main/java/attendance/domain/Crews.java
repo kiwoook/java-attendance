@@ -13,7 +13,7 @@ public class Crews {
     private final Map<String, Crew> crewMap;
 
     public Crews(Map<String, Crew> crewMap) {
-        this.crewMap = crewMap;
+        this.crewMap = Map.copyOf(crewMap);
     }
 
     public Crews() {
