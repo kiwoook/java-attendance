@@ -1,6 +1,7 @@
 package attendance.service;
 
 import attendance.converter.CrewCreateDtoConverter;
+import attendance.domain.Attendance;
 import attendance.domain.AttendanceStats;
 import attendance.domain.Crew;
 import attendance.domain.Crews;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class AttendanceService {
 
     private final DateGenerator dateGenerator;
-    private Crews crews;
+    private final Crews crews;
 
     public AttendanceService(DateGenerator dateGenerator, List<String> attendanceInfoList) {
         this.dateGenerator = dateGenerator;
@@ -34,8 +35,8 @@ public class AttendanceService {
                 .toList();
 
         for (CrewCreateDto createDto : crewCreateDtos) {
-            this.crews = crews.addAttendance(createDto.name(), createDto.attendanceDate(),
-                    createDto.attendanceTime());
+            Attendance attendance = Attendance.from(createDto.attendanceDateTime());
+            crews.saveAttendanceByCrew(createDto.name(), attendance);
         }
     }
 
@@ -44,14 +45,16 @@ public class AttendanceService {
     }
 
     public void addAttendanceByName(String name, LocalTime localTime) {
-        this.crews = crews.addAttendance(name, dateGenerator.generate(), localTime);
+        Attendance attendance = new Attendance(dateGenerator.generate(), localTime);
+
+        crews.addAttendanceByCrew(name, attendance);
     }
 
     public AttendanceChangeInfoDto editAttendanceByName(String name, LocalDate editDate, LocalTime editTime) {
         Crew crew = crews.getCrew(name);
         LocalTime previousTime = crew.getAttendanceTimeByDate(editDate);
-
-        this.crews = crews.editAttendance(name, editDate, editTime);
+        Attendance attendance = new Attendance(editDate, editTime);
+        crews.editAttendance(name, attendance);
 
         return new AttendanceChangeInfoDto(editDate, previousTime, editTime);
     }
@@ -82,4 +85,11 @@ public class AttendanceService {
                 .toList();
     }
 
+    @Override
+    public String toString() {
+        return "AttendanceService{" +
+                "dateGenerator=" + dateGenerator +
+                ", crews=" + crews +
+                '}';
+    }
 }

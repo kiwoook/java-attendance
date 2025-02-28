@@ -6,9 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class CrewsTest {
@@ -17,47 +20,21 @@ class CrewsTest {
     @Test
     void test1() {
         assertThatCode(Crews::create).doesNotThrowAnyException();
-
     }
 
-    @DisplayName("해당 크루의 출석 시간을 추가한다.")
+    @DisplayName("해당 크루가 없다면 크루를 추가하고 출석 시간을 추가한다.")
     @Test
-    void addAttendanceTest1() {
-        // given
+    void saveAttendanceByCrewTest1() {
         Crews crews = Crews.create();
         String name = "꾹이";
 
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
+        Attendance attendance = new Attendance(localDate, localTime);
 
-        Crew expect = Crew.of(name).addAttendance(localDate, localTime);
+        crews.saveAttendanceByCrew(name, attendance);
 
-        // when
-        Crews result = crews.addAttendance(name, localDate, localTime);
-
-        // then
-        assertThat(result.getCrew(name)).isEqualTo(expect);
-    }
-
-    @DisplayName("해당 크루의 출석 시간을 수정한다.")
-    @Test
-    void editAttendanceTest1() {
-        // given
-
-        Crews crews = Crews.create();
-        String name = "꾹이";
-
-        LocalDate localDate = LocalDate.of(2024, 12, 2);
-        LocalTime localTime = LocalTime.of(10, 0);
-        LocalTime editTime = LocalTime.of(11, 0);
-
-        Crew expect = Crew.of(name).addAttendance(localDate, editTime);
-        crews = crews.addAttendance(name, localDate, localTime);
-
-        // when
-        Crews result = crews.editAttendance(name, localDate, editTime);
-
-        assertThat(result.getCrew(name)).isEqualTo(expect);
+        assertThatCode(() -> crews.getCrew(name)).doesNotThrowAnyException();
     }
 
     @DisplayName("해당 크루의 수정하려는 출석 날짜가 없으면 에러를 반환한다.")
@@ -69,27 +46,10 @@ class CrewsTest {
 
         Crews crews = Crews.create();
 
-        assertThatThrownBy(() -> crews.editAttendance(name, localDate, editTime)).isInstanceOf(
+        Attendance attendance = new Attendance(localDate, editTime);
+
+        assertThatThrownBy(() -> crews.editAttendance(name, attendance)).isInstanceOf(
                 IllegalArgumentException.class).hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
-    }
-
-    @DisplayName("이름이 존재하는지 확인한다.")
-    @Test
-    void validateNameTest1() {
-        // given
-
-        Crews crews = Crews.create();
-        String name = "꾹이";
-
-        LocalDate localDate = LocalDate.of(2024, 12, 2);
-        LocalTime localTime = LocalTime.of(10, 0);
-
-        crews = crews.addAttendance(name, localDate, localTime);
-
-        // when
-        Crews finalCrews = crews;
-        assertThatCode(() -> finalCrews.validateName(name)).doesNotThrowAnyException();
-
     }
 
     @DisplayName("이름이 존재하지 않으면 예외를 발생한다.")
@@ -108,14 +68,19 @@ class CrewsTest {
     @Test
     void getSortedDangerCrewsTest() {
         // given
-
-        List<String> name = List.of("꾹이", "비타", "듀이", "레오", "몽이");
-        List<String> expect = List.of("꾹이", "비타", "듀이");
+        Crews crews = Crews.create();
+        List<String> nameList = List.of("후유", "비타", "듀이", "레오", "몽이");
+        List<String> expect = List.of("후유", "비타", "듀이");
 
         LocalDate today = LocalDate.of(2024, 12, 7);
         LocalTime presenceTime = LocalTime.of(10, 0);
 
-        Crews crews = Crews.create();
+        // 데이터가 없으므로 save를 해준다.
+        for(String name : nameList){
+            Attendance initAttendance = Attendance.from(LocalDateTime.of(2024, 12 , 18, 10, 0));
+            crews.saveAttendanceByCrew(name, initAttendance);
+        }
+
 
         // 기준날은 12월 7일로 한다.
         // 12월 2일부터 6일까지 출석한 날을 넣어준다.
@@ -124,7 +89,7 @@ class CrewsTest {
             LocalDate date = LocalDate.of(2024, 12, 2);
 
             for (int j = 0; j <= i; j++) {
-                crews = crews.addAttendance(name.get(i), date, presenceTime);
+                crews.addAttendanceByCrew(nameList.get(i), new Attendance(date, presenceTime));
                 date = date.plusDays(1);
             }
         }
@@ -134,5 +99,60 @@ class CrewsTest {
 
         // when
         assertThat(result).isEqualTo(expect);
+    }
+
+    @DisplayName("출석 추가, 수정 테스트")
+    @Nested
+    class addAttendance {
+
+        Crews crews = Crews.create();
+        String name = "꾹이";
+        LocalDate saveDate = LocalDate.of(2024, 12, 2);
+        LocalTime saveTime = LocalTime.of(10, 0);
+
+        @BeforeEach
+        void init() {
+            Attendance attendance = new Attendance(saveDate, saveTime);
+            crews.saveAttendanceByCrew(name, attendance);
+        }
+
+        @DisplayName("해당 크루의 출석 시간을 추가한다.")
+        @Test
+        void addAttendanceByCrewTest1() {
+            // given
+            String name = "꾹이";
+
+            LocalDate localDate = LocalDate.of(2024, 12, 3);
+            LocalTime localTime = LocalTime.of(10, 0);
+
+            Attendance addedAttendance = new Attendance(localDate, localTime);
+
+            // when
+            Crew result = crews.addAttendanceByCrew(name, addedAttendance);
+
+            // then
+            assertThat(result.getAttendanceTimeByDate(localDate)).isEqualTo(localTime);
+        }
+
+        @DisplayName("해당 크루의 출석 시간을 수정한다.")
+        @Test
+        void editAttendanceTest1() {
+            // given
+            LocalTime editTime = LocalTime.of(11, 0);
+            Attendance editAttendance = new Attendance(saveDate, editTime);
+
+            // when
+            Crew result = crews.editAttendance(name, editAttendance);
+
+            // then
+            assertThat(result.getAttendanceTimeByDate(saveDate)).isEqualTo(editTime);
+        }
+
+        @DisplayName("이름이 존재하는지 확인한다.")
+        @Test
+        void validateNameTest1() {
+            // when
+            assertThatCode(() -> crews.validateName(name)).doesNotThrowAnyException();
+        }
     }
 }

@@ -102,9 +102,7 @@ class AttendanceServiceTest {
 
             assertThatThrownBy(() -> attendanceService.validateName(name)).isInstanceOf(IllegalArgumentException.class)
                     .hasMessage(ErrorMessage.NOT_EXIST_CREW.getMessage());
-
         }
-
     }
 
     @DisplayName("출석 수정 기능")

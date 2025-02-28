@@ -3,8 +3,7 @@ package attendance.converter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import attendance.dto.CrewCreateDto;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,7 @@ class CrewCreateDtoConverterTest {
     @Test
     void parseToDtoTest() {
         String input = "쿠키,2024-12-13 10:08";
-        CrewCreateDto expect = new CrewCreateDto("쿠키", LocalDate.of(2024, 12, 13), LocalTime.of(10, 8));
+        CrewCreateDto expect = new CrewCreateDto("쿠키", LocalDateTime.of(2024, 12, 13, 10, 8));
 
         assertThat(CrewCreateDtoConverter.convert(input)).isEqualTo(expect);
     }

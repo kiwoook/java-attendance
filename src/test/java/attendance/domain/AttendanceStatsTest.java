@@ -24,12 +24,10 @@ class AttendanceStatsTest {
     @Test
     void test1() {
         LocalDate day1 = LocalDate.of(2024, 12, 16);
-        OpenDate openDate1 = OpenDate.of(day1);
-        Attendance attendance1 = new Attendance(openDate1, presenceTime);
+        Attendance attendance1 = new Attendance(day1, presenceTime);
 
         LocalDate day2 = LocalDate.of(2024, 12, 17);
-        OpenDate openDate2 = OpenDate.of(day2);
-        Attendance attendance2 = new Attendance(openDate2, presenceTime);
+        Attendance attendance2 = new Attendance(day2, presenceTime);
 
         Map<LocalDate, Attendance> attendanceMap = new HashMap<>();
 
@@ -46,13 +44,10 @@ class AttendanceStatsTest {
     @Test
     void test2() {
         LocalDate day1 = LocalDate.of(2024, 12, 16);
-        OpenDate openDate1 = OpenDate.of(day1);
-        Attendance attendance1 = new Attendance(openDate1, presenceTime);
+        Attendance attendance1 = new Attendance(day1, presenceTime);
 
         LocalDate day2 = LocalDate.of(2024, 12, 17);
-        OpenDate openDate2 = OpenDate.of(day1);
-
-        Attendance attendance2 = new Attendance(openDate2, presenceTime);
+        Attendance attendance2 = new Attendance(day2, presenceTime);
 
         Map<LocalDate, Attendance> attendanceMap = new HashMap<>();
 

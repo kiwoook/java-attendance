@@ -4,6 +4,7 @@ import static attendance.common.ErrorMessage.INVALID_ATTENDANCE_TIME;
 
 import attendance.common.AttendanceStatus;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -12,16 +13,19 @@ public class Attendance implements Comparable<Attendance> {
     private static final LocalTime CLOSED_TIME = LocalTime.of(23, 0);
     private static final LocalTime OPEN_TIME = LocalTime.of(8, 0);
 
-    private final OpenDate attendanceDate;
+    private final LocalDate attendanceDate;
     private final LocalTime attendanceTime;
 
-    public Attendance(OpenDate attendanceDate, LocalTime attendanceTime) {
+    public Attendance(LocalDate attendanceDate, LocalTime attendanceTime) {
         validateOpenTime(attendanceTime);
         this.attendanceDate = attendanceDate;
         this.attendanceTime = attendanceTime;
     }
 
-    public static Attendance of(OpenDate attendanceDate, LocalTime attendanceTime) {
+    public static Attendance from(LocalDateTime attendanceDateTime) {
+        LocalDate attendanceDate = attendanceDateTime.toLocalDate();
+        LocalTime attendanceTime = attendanceDateTime.toLocalTime();
+
         return new Attendance(attendanceDate, attendanceTime);
     }
 
@@ -36,7 +40,7 @@ public class Attendance implements Comparable<Attendance> {
     }
 
     public LocalDate getAttendanceDate() {
-        return attendanceDate.getOpenDate();
+        return attendanceDate;
     }
 
     public LocalTime getAttendanceTime() {
@@ -44,7 +48,7 @@ public class Attendance implements Comparable<Attendance> {
     }
 
     public AttendanceStatus getStatus() {
-        return AttendanceStatus.of(attendanceDate.getOpenDate(), attendanceTime);
+        return AttendanceStatus.of(attendanceDate, attendanceTime);
     }
 
     @Override
@@ -72,6 +76,6 @@ public class Attendance implements Comparable<Attendance> {
 
     @Override
     public int compareTo(Attendance o) {
-        return this.attendanceDate.getOpenDate().compareTo(o.attendanceDate.getOpenDate());
+        return this.attendanceDate.compareTo(o.attendanceDate);
     }
 }

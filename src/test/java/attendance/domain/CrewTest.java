@@ -34,11 +34,11 @@ class CrewTest {
         LocalTime localTime = LocalTime.of(10, 0);
         Map<LocalDate, Attendance> map = new HashMap<>();
 
-        Attendance attendance = new Attendance(OpenDate.of(localDate), localTime);
+        Attendance attendance = new Attendance(localDate, localTime);
         map.put(localDate, attendance);
         Crew expect = new Crew(crewName, map);
 
-        assertThat(crew.addAttendance(localDate, localTime)).isEqualTo(expect);
+        assertThat(crew.addAttendance(attendance)).isEqualTo(expect);
     }
 
     @DisplayName("똑같은 출석이 존재하면 에러를 반환한다.")
@@ -50,9 +50,11 @@ class CrewTest {
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
 
-        Crew adddedCrew = crew.addAttendance(localDate, localTime);
+        Attendance attendance = new Attendance(localDate, localTime);
 
-        assertThatThrownBy(() -> adddedCrew.addAttendance(localDate, localTime))
+        Crew adddedCrew = crew.addAttendance(attendance);
+
+        assertThatThrownBy(() -> adddedCrew.addAttendance(attendance))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.ALREADY_ATTENDANCE.getMessage());
     }
@@ -66,7 +68,9 @@ class CrewTest {
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
 
-        crew = crew.addAttendance(localDate, localTime);
+        Attendance attendance = new Attendance(localDate, localTime);
+
+        crew = crew.addAttendance(attendance);
 
         assertThat(crew.getAttendanceTimeByDate(localDate)).isEqualTo(localTime);
 
@@ -93,15 +97,17 @@ class CrewTest {
         Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
-        crew = crew.addAttendance(localDate, localTime);
+        Attendance editAttendance = new Attendance(localDate, localTime);
+
+        crew = crew.addAttendance(editAttendance);
 
         Map<LocalDate, Attendance> map = new HashMap<>();
 
-        Attendance attendance = new Attendance(OpenDate.of(localDate), localTime);
+        Attendance attendance = new Attendance(localDate, localTime);
         map.put(localDate, attendance);
         Crew expect = new Crew(crewName, map);
 
-        assertThat(crew.editAttendance(localDate, localTime)).isEqualTo(expect);
+        assertThat(crew.editAttendance(editAttendance)).isEqualTo(expect);
     }
 
     @DisplayName("수정하려는 출석 날짜가 존재하지 않으면 에러가 발생한다.")
@@ -112,8 +118,9 @@ class CrewTest {
         Crew crew = Crew.of(crewName);
         LocalDate localDate = LocalDate.of(2024, 12, 2);
         LocalTime localTime = LocalTime.of(10, 0);
+        Attendance editAttendance = new Attendance(localDate, localTime);
 
-        assertThatThrownBy(() -> crew.editAttendance(localDate, localTime))
+        assertThatThrownBy(() -> crew.editAttendance(editAttendance))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NOT_EXIST_ATTENDANCE.getMessage());
     }
@@ -131,7 +138,7 @@ class CrewTest {
             LocalDate localDate = LocalDate.of(2024, 12, day);
             LocalTime localTime = LocalTime.of(14, 0);
 
-            crew = crew.addAttendance(localDate, localTime);
+            crew = crew.addAttendance(new Attendance(localDate, localTime));
         }
 
         AttendanceStats attendanceStats = crew.getAttendanceStatsByDate(today);
@@ -154,7 +161,7 @@ class CrewTest {
             LocalDate localDate = LocalDate.of(2024, 12, day);
             LocalTime localTime = LocalTime.of(14, 0);
 
-            crew = crew.addAttendance(localDate, localTime);
+            crew = crew.addAttendance(new Attendance(localDate, localTime));
         }
 
         assertThat(crew.getPenaltyStatusByDate(today)).isEqualTo(PenaltyStatus.EXPULSION);
@@ -173,11 +180,12 @@ class CrewTest {
                 LocalDate.of(2024, 12, 18)
         );
 
-        List<Attendance> expected = dates.stream().sorted().map(date -> new Attendance(OpenDate.of(date), LocalTime.of(10, 0)))
+        List<Attendance> expected = dates.stream().sorted()
+                .map(date -> new Attendance(date, LocalTime.of(10, 0)))
                 .toList();
 
         crew = dates.stream()
-                .reduce(crew, (updateCrew, date) -> updateCrew.addAttendance(date, LocalTime.of(10, 0)),
+                .reduce(crew, (updateCrew, date) -> updateCrew.addAttendance(new Attendance(date, LocalTime.of(10, 0))),
                         (a, b) -> b);
 
         assertThat(crew.getAttendancesSortedByDate()).isEqualTo(expected);

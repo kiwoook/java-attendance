@@ -20,7 +20,7 @@ class AttendanceTest {
         LocalDate localDate = LocalDate.of(2024, 12, 16);
         LocalTime localTime = LocalTime.of(10, 0);
 
-        assertThatCode(() -> new Attendance(OpenDate.of(localDate), localTime))
+        assertThatCode(() -> new Attendance(localDate, localTime))
                 .doesNotThrowAnyException();
     }
 
@@ -29,11 +29,10 @@ class AttendanceTest {
     void test5() {
         LocalDate localDate = LocalDate.of(2024, 12, 16);
         LocalTime localTime = LocalTime.of(10, 0);
-        OpenDate openDate = OpenDate.of(localDate);
-        Attendance attendance = new Attendance(openDate, localTime);
+        Attendance attendance = new Attendance(localDate, localTime);
 
         LocalTime editTime = LocalTime.of(11, 0);
-        Attendance expect = new Attendance(openDate, editTime);
+        Attendance expect = new Attendance(localDate, editTime);
 
         assertThat(attendance.editTime(editTime)).isEqualTo(expect);
     }
@@ -43,7 +42,7 @@ class AttendanceTest {
     void test6() {
         LocalDate localDate = LocalDate.of(2024, 12, 16);
         LocalTime localTime = LocalTime.of(10, 0);
-        Attendance attendance = new Attendance(OpenDate.of(localDate), localTime);
+        Attendance attendance = new Attendance(localDate, localTime);
 
         assertThat(attendance.getStatus()).isEqualTo(AttendanceStatus.PRESENCE);
     }

@@ -30,25 +30,26 @@ public class Crew {
         return new Crew(name);
     }
 
-    public Crew addAttendance(LocalDate attendanceDate, LocalTime attendanceTime) {
+    public Crew addAttendance(Attendance attendance) {
+        LocalDate attendanceDate = attendance.getAttendanceDate();
         if (attendanceMap.containsKey(attendanceDate)) {
             throw new IllegalArgumentException(ErrorMessage.ALREADY_ATTENDANCE.getMessage());
         }
 
         HashMap<LocalDate, Attendance> attendanceHashMap = new HashMap<>(attendanceMap);
-        OpenDate openDate = OpenDate.of(attendanceDate);
-        attendanceHashMap.put(attendanceDate, Attendance.of(openDate, attendanceTime));
+        attendanceHashMap.put(attendanceDate, attendance);
 
         return new Crew(name, attendanceHashMap);
     }
 
-    public Crew editAttendance(LocalDate attendanceDate, LocalTime editTime) {
+    public Crew editAttendance(Attendance editAttendance) {
+        LocalDate attendanceDate = editAttendance.getAttendanceDate();
         if (!attendanceMap.containsKey(attendanceDate)) {
             throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_ATTENDANCE.getMessage());
         }
 
         HashMap<LocalDate, Attendance> attendanceHashMap = new HashMap<>(attendanceMap);
-        Attendance editAttendance = attendanceMap.get(attendanceDate).editTime(editTime);
+        attendanceHashMap.remove(attendanceDate);
         attendanceHashMap.put(attendanceDate, editAttendance);
 
         return new Crew(name, attendanceHashMap);

@@ -1,7 +1,6 @@
 package attendance.dto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
-public record CrewCreateDto(String name, LocalDate attendanceDate, LocalTime attendanceTime) {
+public record CrewCreateDto(String name, LocalDateTime attendanceDateTime) {
 }

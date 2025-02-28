@@ -1,9 +1,7 @@
 package attendance.converter;
 
 import attendance.dto.CrewCreateDto;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public final class CrewCreateDtoConverter {
@@ -21,6 +19,6 @@ public final class CrewCreateDtoConverter {
         LocalDateTime localDateTime = LocalDateTime.parse(split[LOCAL_DATE_TIME_INDEX],
                 DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
 
-        return new CrewCreateDto(name, LocalDate.from(localDateTime), LocalTime.from(localDateTime));
+        return new CrewCreateDto(name, localDateTime);
     }
 }

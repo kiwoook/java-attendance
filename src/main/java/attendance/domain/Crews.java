@@ -2,7 +2,6 @@ package attendance.domain;
 
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -12,25 +11,28 @@ public class Crews {
 
     private final Map<String, Crew> crewMap;
 
-    public Crews(Map<String, Crew> crewMap) {
-        this.crewMap = Map.copyOf(crewMap);
-    }
-
     public Crews() {
-        this.crewMap = Map.copyOf(new HashMap<>());
+        this.crewMap = new HashMap<>();
     }
 
     public static Crews create() {
         return new Crews();
     }
 
-    public Crews addAttendance(String name, LocalDate attendanceDate, LocalTime attendanceTime) {
-        HashMap<String, Crew> crewHashMap = new HashMap<>(crewMap);
-
+    public void saveAttendanceByCrew(String name, Attendance attendance) {
         Crew crew = getOrCreateCrew(name);
-        crewHashMap.put(name, crew.addAttendance(attendanceDate, attendanceTime));
+        crewMap.put(name, crew.addAttendance(attendance));
+    }
 
-        return new Crews(crewHashMap);
+    private Crew getOrCreateCrew(String name) {
+        return crewMap.computeIfAbsent(name, Crew::new);
+    }
+
+    public Crew addAttendanceByCrew(String name, Attendance attendance) {
+        Crew crew = getCrew(name);
+        Crew addedCrew = crew.addAttendance(attendance);
+        crewMap.put(name, addedCrew);
+        return addedCrew;
     }
 
     public Crew getCrew(String name) {
@@ -41,24 +43,12 @@ public class Crews {
         return crewMap.get(name);
     }
 
-    private Crew getOrCreateCrew(String name) {
-        if (!crewMap.containsKey(name)) {
-            return Crew.of(name);
-        }
+    public Crew editAttendance(String name, Attendance editAttendance) {
+        Crew crew = getCrew(name);
+        Crew newCrew = crew.editAttendance(editAttendance);
+        crewMap.put(name, newCrew);
 
-        return crewMap.get(name);
-    }
-
-    public Crews editAttendance(String name, LocalDate attendanceDate, LocalTime editTime) {
-        if (!crewMap.containsKey(name)) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_CREW.getMessage());
-        }
-
-        HashMap<String, Crew> crewHashMap = new HashMap<>(crewMap);
-        Crew crew = crewMap.get(name);
-
-        crewHashMap.put(name, crew.editAttendance(attendanceDate, editTime));
-        return new Crews(crewHashMap);
+        return newCrew;
     }
 
     public void validateName(String name) {
