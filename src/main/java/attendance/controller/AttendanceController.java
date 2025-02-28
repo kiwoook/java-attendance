@@ -25,7 +25,6 @@ public class AttendanceController {
     }
 
     public void run() {
-
         Option option;
         do {
             option = executeWithPrintError(this::readOption);
@@ -58,7 +57,6 @@ public class AttendanceController {
 
     private void optionOne() {
         LocalDate today = dateGenerator.generate();
-        // 우발적 중복
         WorkDayChecker.validateWorkDay(today);
 
         String nickname = InputViewer.readNickname();

@@ -1,7 +1,7 @@
 package attendance.view;
 
-import attendance.domain.AttendancePolicy;
 import attendance.common.Constants;
+import attendance.domain.AttendancePolicy;
 import attendance.dto.AttendanceInfoDto;
 import attendance.dto.CrewAttendanceResultDto;
 import attendance.dto.DangerCrewDto;
@@ -98,9 +98,8 @@ public class OutputViewer {
     }
 
     private static String toAttendanceMessage(LocalDate attendanceDate, LocalTime attendanceTime) {
-        String korean = AttendancePolicy.determineStatus(attendanceDate, attendanceTime).getDescription();
+        String description = AttendancePolicy.determineStatus(attendanceDate, attendanceTime).getDescription();
 
-        return DateTimeUtil.formatLocalTime(attendanceTime) + " (" + korean + ")";
+        return DateTimeUtil.formatLocalTime(attendanceTime) + " (" + description + ")";
     }
-
 }
