@@ -163,7 +163,7 @@ class AttendanceServiceTest {
 
             assertAll(
                     () -> assertThat(result.penaltyStatus()).isEqualTo(PenaltyStatus.EXPULSION.getKorean()),
-                    () -> assertThat(result.lateCount()).isEqualTo(1)
+                    () -> assertThat(result.tardyCount()).isEqualTo(1)
             );
 
         }

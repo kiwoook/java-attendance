@@ -27,7 +27,7 @@ class AttendancePolicyTest {
         );
     }
 
-    static Stream<LocalTime> lateTimeArguments() {
+    static Stream<LocalTime> tardyTimeArguments() {
         return Stream.of(
                 LocalTime.of(10, 6),
                 LocalTime.of(10, 30)
@@ -106,11 +106,11 @@ class AttendancePolicyTest {
 
     @DisplayName("시작 시간을 5분 초과하고 30분 전이라면 지각이다.")
     @ParameterizedTest
-    @MethodSource("lateTimeArguments")
+    @MethodSource("tardyTimeArguments")
     void testLate(LocalTime time) {
         LocalDate thursday = LocalDate.of(2024, 12, 17);
 
-        assertThat(AttendancePolicy.determineStatus(thursday, time)).isEqualTo(AttendanceStatus.LATE);
+        assertThat(AttendancePolicy.determineStatus(thursday, time)).isEqualTo(AttendanceStatus.TARDY);
     }
 
     @DisplayName("시작 시간 30분 초과 시 결석이다.")

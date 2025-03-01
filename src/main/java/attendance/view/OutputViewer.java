@@ -43,7 +43,7 @@ public class OutputViewer {
         System.out.println("이번 달 " + name + "의 출석 기록입니다.");
 
         printAttendanceInfo(resultDto.attendanceInfoMap(), today);
-        printAttendanceStats(resultDto.presenceCount(), resultDto.lateCount(), resultDto.absenceCount());
+        printAttendanceStats(resultDto.presenceCount(), resultDto.tardyCount(), resultDto.absenceCount());
 
         System.out.println(Constants.LINE_SEPARATOR + resultDto.penaltyStatus() + " 대상자입니다.");
     }
@@ -54,7 +54,7 @@ public class OutputViewer {
 
         for (DangerCrewDto dangerCrewDto : dangerCrewDtos) {
             System.out.println("- " + dangerCrewDto.name() + ": 결석 " + dangerCrewDto.absenceCount() + "회, 지각 "
-                    + dangerCrewDto.lateCount() + "회 (" + dangerCrewDto.penaltyStatus() + ")");
+                    + dangerCrewDto.tardyCount() + "회 (" + dangerCrewDto.penaltyStatus() + ")");
         }
 
     }
@@ -90,10 +90,10 @@ public class OutputViewer {
         System.out.println(DateTimeUtil.formatLocalDate(localDate) + " --:-- (결석)");
     }
 
-    private static void printAttendanceStats(int presenceCount, int lateCount, int absenceCount) {
+    private static void printAttendanceStats(int presenceCount, int tardyCount, int absenceCount) {
         System.out.println();
         System.out.println("출석:" + presenceCount + "회");
-        System.out.println("지각:" + lateCount + "회");
+        System.out.println("지각:" + tardyCount + "회");
         System.out.println("결석:" + absenceCount + "회");
     }
 

@@ -6,7 +6,7 @@ import java.util.Map;
 public enum AttendanceStatus {
 
     PRESENCE("출석"),
-    LATE("지각"),
+    TARDY("지각"),
     ABSENCE("결석");
 
     private final String description;

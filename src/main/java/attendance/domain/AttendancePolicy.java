@@ -31,7 +31,7 @@ public class AttendancePolicy {
             return AttendanceStatus.ABSENCE;
         }
         if (attendanceTime.isAfter(criterionTime.plusMinutes(LATE_TIMEOUT))) {
-            return AttendanceStatus.LATE;
+            return AttendanceStatus.TARDY;
         }
         return AttendanceStatus.PRESENCE;
     }

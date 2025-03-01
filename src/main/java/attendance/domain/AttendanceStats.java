@@ -60,7 +60,7 @@ public class AttendanceStats {
     }
 
     public int getLateCount() {
-        return counts.get(AttendanceStatus.LATE);
+        return counts.get(AttendanceStatus.TARDY);
     }
 
     public int getAbsenceCount() {
@@ -68,6 +68,6 @@ public class AttendanceStats {
     }
 
     public Integer priorityCount() {
-        return getLateCount() + getAbsenceCount() * 3;
+        return getLateCount() + getAbsenceCount() * Constants.TARDY_THRESHOLD_FOR_ABSENCE;
     }
 }

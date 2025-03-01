@@ -4,7 +4,7 @@ import attendance.domain.AttendanceStats;
 import attendance.domain.Crew;
 import attendance.domain.PenaltyStatus;
 
-public record DangerCrewDto(String name, int absenceCount, int lateCount, String penaltyStatus) {
+public record DangerCrewDto(String name, int absenceCount, int tardyCount, String penaltyStatus) {
 
     public static DangerCrewDto of(Crew crew, AttendanceStats attendanceStats, PenaltyStatus penaltyStatus) {
 

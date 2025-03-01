@@ -1,5 +1,6 @@
 package attendance.domain;
 
+import attendance.common.Constants;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
@@ -17,8 +18,8 @@ public enum PenaltyStatus {
         this.predicate = predicate;
     }
 
-    public static PenaltyStatus of(int lateCount, int absenceCount) {
-        int count = lateCount / 3 + absenceCount;
+    public static PenaltyStatus of(int tardyCount, int absenceCount) {
+        int count = tardyCount / Constants.TARDY_THRESHOLD_FOR_ABSENCE + absenceCount;
 
         return Arrays.stream(values()).filter(status -> status.predicate.test(count))
                 .findFirst()

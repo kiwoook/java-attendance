@@ -67,7 +67,7 @@ public final class InputViewer {
 
         try {
             return LocalTime.parse(input, formatter);
-        } catch (DateTimeParseException e) {
+        } catch (final DateTimeParseException e) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_TIME_FORMAT.getMessage());
         }
     }
@@ -77,7 +77,7 @@ public final class InputViewer {
             int day = Integer.parseInt(input);
 
             return LocalDate.of(2024, 12, day);
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_DAY_INPUT.getMessage());
         }
     }

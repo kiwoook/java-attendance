@@ -97,7 +97,7 @@ public class AttendanceController {
     private void executeWithPrintError(Runnable runnable) {
         try {
             runnable.run();
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             OutputViewer.printErrorMessage(e);
         }
     }
@@ -105,7 +105,7 @@ public class AttendanceController {
     private <T> T executeWithPrintError(Supplier<T> inputSupplier) {
         try {
             return inputSupplier.get();
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             OutputViewer.printErrorMessage(e);
             throw e;
         }

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public record CrewAttendanceResultDto(Map<LocalDate, AttendanceInfoDto> attendanceInfoMap, int presenceCount,
-                                      int lateCount,
+                                      int tardyCount,
                                       int absenceCount, String penaltyStatus) {
 
     public static CrewAttendanceResultDto of(Map<LocalDate, AttendanceInfoDto> attendanceInfoMap,

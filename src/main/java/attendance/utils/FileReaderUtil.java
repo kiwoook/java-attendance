@@ -15,7 +15,7 @@ public class FileReaderUtil {
             return br.lines()
                     .skip(1)
                     .toList();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -12,6 +12,8 @@ public final class Constants {
     public static final String LINE_SEPARATOR = System.lineSeparator();
     public static final String TIME_FORMAT = "HH:mm";
 
+    public static final int TARDY_THRESHOLD_FOR_ABSENCE = 3;
+
     private Constants() {
     }
 }
