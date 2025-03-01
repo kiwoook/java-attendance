@@ -25,19 +25,28 @@ public class AttendanceService {
 
     public AttendanceService(DateGenerator dateGenerator, List<String> attendanceInfoList) {
         this.dateGenerator = dateGenerator;
-        this.crews = Crews.create();
-        initCrews(attendanceInfoList);
+        this.crews = Crews.from(initCrews(attendanceInfoList));
     }
 
-    private void initCrews(List<String> attendanceInfoList) {
+
+    private List<Crew> initCrews(List<String> attendanceInfoList) {
         List<CrewCreateDto> crewCreateDtos = attendanceInfoList.stream()
                 .map(CrewCreateDtoConverter::convert)
                 .toList();
 
-        for (CrewCreateDto createDto : crewCreateDtos) {
-            Attendance attendance = Attendance.from(createDto.attendanceDateTime());
-            crews.saveAttendanceByCrew(createDto.name(), attendance);
-        }
+        return mergeCrew(crewCreateDtos);
+    }
+
+    private List<Crew> mergeCrew(List<CrewCreateDto> crewCreateDtos) {
+        return crewCreateDtos.stream()
+                .map(dto -> new Crew(dto.name(), Attendance.from(dto.attendanceDateTime())))
+                .collect(Collectors.toMap(
+                        Crew::getName,
+                        Function.identity(),
+                        Crew::merge
+                )).values()
+                .stream()
+                .toList();
     }
 
     public void validateName(String name) {

@@ -9,7 +9,8 @@ public enum ErrorMessage {
     NOT_EXIST_CREW("해당 크루가 존재하지 않습니다."),
     INVALID_INPUT_OPTION("숫자 1~4 또는 문자 'Q'만 입력할 수 있습니다."),
     INVALID_TIME_FORMAT("시간 형식이 올바르지 않습니다. HH:mm 형식이어야 합니다. (예: 09:59)"),
-    INVALID_DAY_INPUT("숫자 1~31 로만 입력할 수 있습니다.");
+    INVALID_DAY_INPUT("숫자 1~31 로만 입력할 수 있습니다."),
+    INVALID_MERGE("이름이 다른 크루와는 병합할 수 없습니다.");
 
     private final String message;
 

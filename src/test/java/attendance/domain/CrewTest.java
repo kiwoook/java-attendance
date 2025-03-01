@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
@@ -189,5 +190,44 @@ class CrewTest {
                         (a, b) -> b);
 
         assertThat(crew.getAttendancesSortedByDate()).isEqualTo(expected);
+    }
+
+    @DisplayName("같은 이름에 다른 출석이 있으면 병합한다.")
+    @Test
+    void mergeTest1() {
+        // given
+        LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 2, 10, 0);
+        Attendance attendance1 = Attendance.from(localDateTime);
+        Attendance attendance2 = Attendance.from(localDateTime.plusDays(1));
+
+        String name = "꾹이";
+
+        Crew crew1 = new Crew(name, attendance1);
+        Crew crew2 = new Crew(name, attendance2);
+
+        // when
+        Crew result = crew1.merge(crew2);
+
+        // then
+        assertThat(result.getAttendancesSortedByDate()).hasSize(2);
+
+    }
+
+    @DisplayName("다른 이름이라면 예외를 반환한다.")
+    @Test
+    void mergeTest2() {
+        LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 2, 10, 0);
+        Attendance attendance1 = Attendance.from(localDateTime);
+        Attendance attendance2 = Attendance.from(localDateTime.plusDays(1));
+
+        String name1 = "꾹이";
+        String name2 = "레오";
+
+        Crew crew1 = new Crew(name1, attendance1);
+        Crew crew2 = new Crew(name2, attendance2);
+
+        assertThatThrownBy(() -> crew1.merge(crew2))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.INVALID_MERGE.getMessage());
     }
 }

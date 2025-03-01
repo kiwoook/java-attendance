@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class AttendanceTest {
 
@@ -44,5 +46,11 @@ class AttendanceTest {
         assertThat(attendance.getStatus()).isEqualTo(AttendanceStatus.PRESENCE);
     }
 
+    @DisplayName("운영 시간이 아니면 에러를 반환한다.")
+    @CsvSource
+    @ParameterizedTest
+    void test7(LocalDate localDate, LocalTime localTime) {
+
+    }
 
 }

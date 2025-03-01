@@ -18,7 +18,12 @@ public class Crew {
 
     public Crew(String name, Map<LocalDate, Attendance> attendanceMap) {
         this.name = name;
-        this.attendanceMap = attendanceMap;
+        this.attendanceMap = Map.copyOf(attendanceMap);
+    }
+
+    public Crew(String name, Attendance attendance) {
+        this.name = name;
+        this.attendanceMap = Map.of(attendance.getAttendanceDate(), attendance);
     }
 
     public Crew(String name) {
@@ -55,6 +60,17 @@ public class Crew {
         return new Crew(name, attendanceHashMap);
     }
 
+    public Crew merge(Crew crew) {
+        if (!this.name.equals(crew.name)) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_MERGE.getMessage());
+        }
+
+        HashMap<LocalDate, Attendance> attendanceHashMap = new HashMap<>(attendanceMap);
+        attendanceHashMap.putAll(crew.attendanceMap);
+
+        return new Crew(this.name, attendanceHashMap);
+    }
+
     public LocalTime getAttendanceTimeByDate(LocalDate attendanceDate) {
         if (!attendanceMap.containsKey(attendanceDate)) {
             throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_ATTENDANCE.getMessage());
@@ -77,8 +93,10 @@ public class Crew {
         return stats.getPenaltyStatus();
     }
 
+
     private Map<LocalDate, Attendance> getAttendanceMapUntilDate(LocalDate today) {
-        return new TreeMap<>(attendanceMap).entrySet().stream().filter(entry -> entry.getKey().isBefore(today))
+        return new TreeMap<>(attendanceMap).entrySet().stream()
+                .filter(entry -> entry.getKey().isBefore(today))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 

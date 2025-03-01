@@ -3,29 +3,24 @@ package attendance.domain;
 import attendance.common.ErrorMessage;
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Crews {
 
     private final Map<String, Crew> crewMap;
 
-    public Crews() {
-        this.crewMap = new HashMap<>();
+    public Crews(Map<String, Crew> crewMap) {
+        this.crewMap = crewMap;
     }
 
-    public static Crews create() {
-        return new Crews();
-    }
+    public static Crews from(List<Crew> crews) {
+        Map<String, Crew> crewMap = crews.stream()
+                .collect(Collectors.toMap(Crew::getName, Function.identity()));
 
-    public void saveAttendanceByCrew(String name, Attendance attendance) {
-        Crew crew = getOrCreateCrew(name);
-        crewMap.put(name, crew.addAttendance(attendance));
-    }
-
-    private Crew getOrCreateCrew(String name) {
-        return crewMap.computeIfAbsent(name, Crew::new);
+        return new Crews(crewMap);
     }
 
     public Crew addAttendanceByCrew(String name, Attendance attendance) {
